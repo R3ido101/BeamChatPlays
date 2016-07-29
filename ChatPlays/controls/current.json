@@ -1,0 +1,20 @@
+{
+	"tactile":{
+		"1":{
+			"id": 1,
+			"key": "w",
+			"cooldown": 0
+		},
+		"3":{
+			"id": 3,
+			"key": "a",
+			"cooldown": 0
+		}
+	},
+	"joystick":{
+
+	},
+	"screen":{
+
+	}
+}

@@ -1,0 +1,16 @@
+{
+  "name": "chatplays",
+  "version": "1.0.0",
+  "description": "An app for beam.pro that allows for each interactive setup via json file button configuration.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "beam.pro/firebottle",
+  "license": "ISC",
+  "dependencies": {
+    "beam-client-node": "^0.5.3",
+    "beam-interactive-node": "^0.3.1",
+    "robotjs": "^0.4.4"
+  }
+}
