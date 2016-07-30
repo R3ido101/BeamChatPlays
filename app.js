@@ -1,8 +1,8 @@
 const Beam = require('beam-client-node');
 const Interactive = require('beam-interactive-node');
 const rjs = require('robotjs');
-var auth = require('./settings/settings.json');
-var Packets = require('beam-interactive-node/dist/robot/packets').default;
+const auth = require('./settings/settings.json');
+const Packets = require('beam-interactive-node/dist/robot/packets').default;
 
 // Global Vars
 app = {
@@ -62,31 +62,18 @@ function setupRobotEvents (robot) {
 
     	if (report.tactile.length > 0){
     		tactile(report.tactile);
-			
 			tactileProgress(report.tactile);
-			if (app.tactileProgress.tactile.length > 0){
-				robot.send( new Packets.ProgressUpdate(app.tactileProgress));
-				app.tactileProgress = [];
-			}
     	}
     	if (report.joystick.length > 0) {
     		joystick(report.joystick[0]);
-			
-			joystickProgress(report.joystick);
-			if (app.joystickProgress.length > 0){
-				robot.send( new Packets.ProgressUpdate(app.joystickProgress));
-				app.joystickProgress = [];
-			}
+			joystickProgress(report.joystick[0]);
     	}
     	if (report.screen.length > 0) {
     		screen(report.screen[0]);
-			
 			screenProgress(report.screen[0]);
-			if (app.screenProgress.screen.length > 0){
-				robot.send( new Packets.ProgressUpdate(app.screenProgress));
-				app.screenProgress = [];
-			}
     	}
+		
+		progressUpdate(robot);
     });
     robot.on('error', err => {
         throw new Error('There was an error setting up robot events.', err);
@@ -227,6 +214,27 @@ function screen(report){
 }
 
 // Progress Updates
+
+// Progress Compile
+function progressUpdate(robot){
+	var tactile = app.tactileProgress;
+	var screen = app.screenProgress;
+	var joystick = app.joystickProgress;
+
+	var progress = {
+		"tactile": tactile,
+		"screen": screen,
+		"joystick": joystick
+	}
+	
+	console.log(progress);
+	
+	robot.send( new Packets.ProgressUpdate(progress));
+	app.tactileProgress = [];
+	app.screenProgress = [];
+	app.joystickProgress = [];
+}
+
 // Tactile
 function tactileProgress(tactile){
 	var json = [];
@@ -254,9 +262,7 @@ function tactileProgress(tactile){
 			});
 		}
 	}
-	app.tactileProgress = {
-		tactile: json
-	};
+	app.tactileProgress = json;
 }
 
 // Screen
@@ -277,29 +283,29 @@ function screenProgress(screen){
 			}]
 		});
 	}
-	app.screenProgress = {
-		screen: json
-	};
+	app.screenProgress = json;
 }
 
 // Joystick
 function joystickProgress (joystick){
 	var json = [];
-	for( i = 0; i < joystick.length; i++){
-		var rawid = joystick[i].id;
-		var mean = joystick[i].coordMean;
-		var joyX = mean.x;
-		var joyY = mean.y;
-		
-		var rad =  Math.atan2(joyY, joyX);
-		
-		json.push({
-			"id": rawid,
-			"angle": rad,
-			"intensity": 1
-		});
+	var rawid = joystick.id;
+	var mean = joystick.coordMean;
+	var joyX = mean.x;
+	var joyY = mean.y;
+	if ( isNaN(joyX) === true){
+		var joyX = 0;
 	}
-	app.joystickProgress = {
-		joystick: json
-	};
+	if (isNaN(joyY) === true){
+		var joyY = 0;
+	}
+	
+	var rad =  Math.atan2(joyY, joyX);
+	
+	json.push({
+		"id": rawid,
+		"angle": rad,
+		"intensity": 1
+	});
+	app.joystickProgress = json;
 }
