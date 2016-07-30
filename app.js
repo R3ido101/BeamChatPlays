@@ -287,12 +287,9 @@ function screenProgress(screen){
 // Joystick
 function joystickProgress (joystick){
 	var json = [];
-	for( i = 0; i < tactile.length; i++){
+	for( i = 0; i < joystick.length; i++){
 		var rawid = joystick[i].id;
 		var mean = joystick[i].coordMean;
-		var joyX = mean.x;
-		var joyY = mean.y;
-
 		var joyX = mean.x;
 		var joyY = mean.y;
 		
