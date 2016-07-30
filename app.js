@@ -268,9 +268,7 @@ function screenProgress(screen){
 	var screenY = mean.y;
 	var clicks = screen.clicks;
 	
-	if ( clicks > 0){
-		console.log('Mouse Click: '+screenX+' '+screenY);
-		
+	if ( clicks > 0){		
 		json.push({
 			"id": rawid,
 			"clicks": [{
@@ -293,10 +291,12 @@ function joystickProgress (joystick){
 		var joyX = mean.x;
 		var joyY = mean.y;
 		
+		var rad =  Math.atan2(joyY, joyX);
+		
 		json.push({
 			"id": rawid,
-			"angle": 0,
-			"intensity": 0
+			"angle": rad,
+			"intensity": 1
 		});
 	}
 	app.joystickProgress = {
