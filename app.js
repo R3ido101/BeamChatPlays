@@ -227,7 +227,7 @@ function progressUpdate(robot){
 		"joystick": joystick
 	}
 	
-	console.log(progress);
+	//console.log(progress);
 	
 	robot.send( new Packets.ProgressUpdate(progress));
 	app.tactileProgress = [];
