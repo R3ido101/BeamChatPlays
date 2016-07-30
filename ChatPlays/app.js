@@ -8,8 +8,7 @@ var Packets = require('beam-interactive-node/dist/robot/packets').default;
 app = {
 	auth: require('./settings/auth.json'),
 	controls: require('./controls/current.json'),
-	settings: require('./settings/settings.json'),
-	progress: []
+	settings: require('./settings/settings.json')
 }
 
 const channelId = app.auth['channelID'];
@@ -60,14 +59,33 @@ function performRobotHandShake (robot) {
 function setupRobotEvents (robot) {
 	console.log("Good news everyone! Interactive is ready to go!");
     robot.on('report', report => {
+
     	if (report.tactile.length > 0){
     		tactile(report.tactile);
+			
+			tactileProgress(report.tactile);
+			if (app.tactileProgress.tactile.length > 0){
+				robot.send( new Packets.ProgressUpdate(app.tactileProgress));
+				app.tactileProgress = [];
+			}
     	}
     	if (report.joystick.length > 0) {
     		joystick(report.joystick[0]);
+			
+			joystickProgress(report.joystick);
+			if (app.joystickProgress.length > 0){
+				robot.send( new Packets.ProgressUpdate(app.joystickProgress));
+				app.joystickProgress = [];
+			}
     	}
     	if (report.screen.length > 0) {
     		screen(report.screen[0]);
+			
+			screenProgress(report.screen[0]);
+			if (app.screenProgress.screen.length > 0){
+				robot.send( new Packets.ProgressUpdate(app.screenProgress));
+				app.screenProgress = [];
+			}
     	}
     });
     robot.on('error', err => {
@@ -89,15 +107,24 @@ function tactile(tactile){
 		if ( button !== undefined && button !== null){
 			var buttonID = button['id'];
 			var key = button['key'];
+			var movementCounter = button['movementCounter'];
+			var cooldown = button['cooldown'];
+			
+			buttonSave(key, holding, press);
+			
+			if (isNaN(movementCounter) === true && movementCounter !== null && movementCounter !== undefined && movementCounter !== ""){
+				
+				movement(key, movementCounter, buttonID, cooldown);
+				
+			} else {
+				if(isNaN(holding) === false){
+					tactileHold(key, holding, buttonID, cooldown);
+				}
 
-			if(isNaN(holding) === false){
-				tactileHold(key, holding);
+				if (isNaN(press) === false) {
+					tactileTap(key, press, buttonID, cooldown);
+				}
 			}
-
-            if (isNaN(press) === false) {
-				tactileTap(key, press);
-			}
-
 		} else {
 			console.error("ERROR: Button #"+rawid+" is missing from controls json file. Stopping app.");
             process.exit();
@@ -105,30 +132,68 @@ function tactile(tactile){
 	}
 }
 
-// Versus Key Saves
+// Button Saves
 // Constantly saves holding number to var for reference in key versus comparisons.
-function versusSave(key, holding){
-    app[key] = holding;
+function buttonSave(key, holding, press){
+	if (holding > 0){
+		app[key] = holding;
+	} else if (press > 0){
+		app[key] = press;
+	} else {
+		app[key] = 0;
+	}
+
+	if ( app[key+'Save'] === undefined){
+		app[key+'Save'] = false;
+	}
+	
+}
+
+// Movement Keys
+function movement(key, movementCounter, buttonID, cooldown){
+	
+	var keyOne = app[key];
+	var keyOnePressed = app[key+'Save'];
+	var keyTwo = app[movementCounter];
+	var keyTwoPressed = app[movementCounter+'Save'];
+	
+	if (keyOne > keyTwo && keyOnePressed === false){
+		console.log("Movement: "+key+" was pressed.");
+        rjs.keyToggle(key, "down");
+        app[key+'Save'] = true;
+	}
+	if (keyTwo > keyOne && keyTwoPressed === false){
+		console.log("Movement: "+movementCounter+" was pressed.");
+        rjs.keyToggle(movementCounter, "down");
+        app[movementCounter+'Save'] = true;
+	}
+	if (keyOne === keyTwo){
+		if (keyOnePressed === true || keyTwoPressed === true ){
+			rjs.keyToggle(key, "up");
+			rjs.keyToggle(movementCounter, "up");
+			app[key+'Save'] = false;
+			app[movementCounter+'Save'] = false;
+		}
+	}
 }
 
 // Tactile Key Hold
-function tactileHold(key, holding){
-    var holdSave = app[key];
-	if (holding > 0 && holdSave !== true){
-		console.log(key+" is being held by "+holding+" human(s).");
+function tactileHold(key, holding, buttonID, cooldown){
+	if (app[key] > 0 && app[key+'Save'] !== true){
+		console.log(key+" is being held down.");
         rjs.keyToggle(key, "down");
-        app[key] = true;
-	} else if (holding === 0 && holdSave !== false){
-        console.log(key+" is being held by "+holding+" human(s).");
+        app[key+'Save'] = true;
+	} else if (holding === 0 && app[key+'Save'] !== false){
+        console.log(key+" is no longer held down.");
         rjs.keyToggle(key, "up");
-        app[key] = false;
+        app[key+'Save'] = false;
     }
 }
 
 // Tactile Key Tap.
-function tactileTap(key, press){
+function tactileTap(key, press, buttonID, cooldown){
 	if (press > 0){
-		console.log(key+" was pressed by "+press+" human(s).");
+		console.log(key+" was pressed.");
 		rjs.keyToggle(key, "down");
 		setTimeout(function(){ 
 			rjs.keyToggle(key, "up"); 
@@ -153,15 +218,91 @@ function screen(report){
 	var screenWidth = 1920;
 	var screenHeight = 1080;
     const mean = report.coordMean;
-    if (!isNaN(mean.x) && !isNaN(mean.y)) {
-        rjs.moveMouse(
-            Math.round( screenWidth * mean.x),
-            Math.round( screenHeight * mean.y)
-        );
-    }
+	if (!isNaN(mean.x) && !isNaN(mean.y)) {
+		rjs.moveMouse(
+			Math.round( screenWidth * mean.x),
+			Math.round( screenHeight * mean.y)
+		);
+	}
 }
 
 // Progress Updates
-function progressUpdate(){
+// Tactile
+function tactileProgress(tactile){
+	var json = [];
+	for( i = 0; i < tactile.length; i++){
+		var rawid = tactile[i].id;
+		var holding = tactile[i].holding;
+		var press = tactile[i].pressFrequency;
+		
+		var controls = app.controls;
+		var button = controls.tactile[rawid]
+		var cooldown = button['cooldown'];
+		
+		if ( isNaN(holding) === false && holding > 0 || isNaN(press) === false && press > 0){
+			json.push({
+				"id": rawid, 
+				"cooldown": cooldown, 
+				"fired": true,
+				"progress": 1
+			});
+		} else {
+			json.push({
+				"id": rawid, 
+				"fired": false,
+				"progress": 0
+			});
+		}
+	}
+	app.tactileProgress = {
+		tactile: json
+	};
+}
 
+// Screen
+function screenProgress(screen){
+	var json = [];
+	var rawid = screen.id;
+	var mean = screen.coordMean;
+	var screenX = mean.x;
+	var screenY = mean.y;
+	var clicks = screen.clicks;
+	
+	if ( clicks > 0){
+		console.log('Mouse Click: '+screenX+' '+screenY);
+		
+		json.push({
+			"id": rawid,
+			"clicks": [{
+				"coordinate": mean,
+				"intensity": 1
+			}]
+		});
+	}
+	app.screenProgress = {
+		screen: json
+	};
+}
+
+// Joystick
+function joystickProgress (joystick){
+	var json = [];
+	for( i = 0; i < tactile.length; i++){
+		var rawid = joystick[i].id;
+		var mean = joystick[i].coordMean;
+		var joyX = mean.x;
+		var joyY = mean.y;
+
+		var joyX = mean.x;
+		var joyY = mean.y;
+		
+		json.push({
+			"id": rawid,
+			"angle": 0,
+			"intensity": 0
+		});
+	}
+	app.joystickProgress = {
+		joystick: json
+	};
 }

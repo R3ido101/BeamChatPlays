@@ -3,18 +3,14 @@
 		"1":{
 			"id": 1,
 			"key": "w",
+			"movementCounter": "s",
 			"cooldown": 0
 		},
 		"3":{
 			"id": 3,
-			"key": "a",
+			"key": "s",
+			"movementCounter": "",
 			"cooldown": 0
 		}
-	},
-	"joystick":{
-
-	},
-	"screen":{
-
 	}
 }
