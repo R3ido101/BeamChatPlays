@@ -29,7 +29,7 @@ beam.use('password', {
 .catch(err => {
 	console.log(err.message);
     if (err.res) {
-        throw new Error('Error connecting to Interactive:' + err.res.body.mesage);
+        throw new Error('Error connecting to Interactive:' + err.res.body.message);
     }
     throw new Error('Error connecting to Interactive', err);
 });
