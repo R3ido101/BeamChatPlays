@@ -1,0 +1,34 @@
+{
+	"tactile":{
+		"0":{
+			"id": 0,
+			"key": "w",
+			"movementCounter": "s",
+			"cooldown": 0
+		},
+		"1":{
+			"id": 1,
+			"key": "a",
+			"movementCounter": "d",
+			"cooldown": 0
+		},
+		"2":{
+			"id": 2,
+			"key": "d",
+			"movementCounter": "a",
+			"cooldown": 0
+		},
+		"4":{
+			"id": 4,
+			"key": "s",
+			"movementCounter": "w",
+			"cooldown": 0
+		},
+		"5":{
+			"id": 5,
+			"key": "e",
+			"movementCounter": "",
+			"cooldown": 0
+		}
+	}
+}

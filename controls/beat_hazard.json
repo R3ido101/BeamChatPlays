@@ -1,0 +1,58 @@
+{
+	"tactile":{
+		"0":{
+			"id": 0,
+			"key": "w",
+			"movementCounter": "s",
+			"cooldown": 0
+		},
+		"1":{
+			"id": 1,
+			"key": "a",
+			"movementCounter": "d",
+			"cooldown": 0
+		},
+		"2":{
+			"id": 2,
+			"key": "d",
+			"movementCounter": "a",
+			"cooldown": 0
+		},
+		"3":{
+			"id": 3,
+			"key": "s",
+			"movementCounter": "w",
+			"cooldown": 0
+		},
+		"4":{
+			"id": 4,
+			"key": "z",
+			"movementCounter": "",
+			"cooldown": 0
+		},
+		"5":{
+			"id": 5,
+			"key": "x",
+			"movementCounter": "",
+			"cooldown": 30000
+		},
+		"7":{
+			"id": 7,
+			"key": "space",
+			"movementCounter": "",
+			"cooldown": 0
+		},
+		"8":{
+			"id": 8,
+			"key": "e",
+			"movementCounter": "",
+			"cooldown": 0
+		},
+		"9":{
+			"id": 9,
+			"key": "f",
+			"movementCounter": "",
+			"cooldown": 0
+		}
+	}
+}
