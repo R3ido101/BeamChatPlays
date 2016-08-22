@@ -1,0 +1,51 @@
+/** Global Structure **/
+html{
+	width:100vw;
+	height:100vh;
+	background-color: #1b1e31;
+}
+body{
+	margin:0px;
+	padding:0px;
+}
+.wrapper{
+	background-color: #1b1e31;
+}
+
+/** Tab Structure **/
+#tabs{
+	display:flex;
+	width:100vw;
+	height:100vh;
+	margin:0px;
+	padding:0px;
+	background-color:transparent;
+}
+.ui-widget.ui-widget-content{border:none;}
+.ui-tabs .ui-tabs-nav{background-color: #cecece;}
+.ui-tabs .ui-tabs-panel{flex-grow: 2; color:white; padding: 0em 0em 0em 1em; float: right; width: 40em;}
+.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; margin: 0 -1px .2em 0; }
+.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover{background-color:#536dfe;}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor{width:100%; outline: none; padding: .5em;}
+
+/** Button Tab **/
+.button-wrap{
+	display:flex;
+}
+.button-left{
+	width:75%;
+}
+.button-right{
+	background-color:white;
+	height: 100vh;
+	overflow-y: scroll;
+	width:25%;
+	background-color: #cecece;
+}
+.button-right-content{
+	padding:.5em;
+	color: black;
+}

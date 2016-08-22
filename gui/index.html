@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Beam Chat Plays by @firebottletv (beam.pro/firebottle)</title>
+	<link rel="stylesheet" href="./css/jquery-ui.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+	
+</head>
+<body>
+
+<div class="wrapper">
+
+	<div id="tabs">
+	  <ul>
+		<li><a href="#tabs-1">Welcome!</a></li>
+		<li><a href="#tabs-2">Login</a></li>
+		<li><a href="#tabs-3">Buttons</a></li>
+		<li><a href="#tabs-4">Log</a></li>
+	  </ul>
+	  
+	  
+	  
+	  <div id="tabs-1">
+		<h2>Welcome</h2>
+		<p>This is the first window people see. It will show the logo and about information as well as instructions.</p>
+	  </div>
+	  
+	  
+	  
+	  <div id="tabs-2">
+		<h2>Login</h2>
+		<p>Enter your beam.pro username and password. This info is saved and used each time you connect with interactive controls.</p>
+		<div class="login">
+			<div class="username">
+				Username <br>
+				<input type="text" name="username">
+			</div>
+			<div class="password">
+				Password <br>
+				<input type="password" name="password">
+			</div>
+			<div class="loginsubmit">
+				<button class="login">Save</button>
+			</div>
+		</div>
+	  </div>
+	  
+	  
+	  
+	  <div id="tabs-3">
+		<div class="button-wrap">
+			<div class="button-left">
+				<h2>Buttons</h2>
+				<p>Select a game profile from the dropdown, or create a new one. Once a game profile is selected you'll be able to customize your controls. Once done, hit the connect button.</p>
+				<div class="control-dropdown-wrap">
+					Active Game Profile: <br>
+					<select class="control-dropdown">
+						<option value="default">Choose Game</option>
+					</select>
+					<button>New</button>
+					<button>Delete</button>
+				</div>
+				<div class="control-entry" style="display:none">
+					<div class="buttonid">
+						Button ID: <br>
+						<input type="text" name="buttonid">
+					</div>
+					<div class="key">
+						Key: <br>
+						<input type="text" name="key">
+					</div>
+					<div class="counter">
+						Movement Counter: <br>
+						<input type="text" name="counter">
+					</div>
+					<div class="cooldown">
+						Global Cooldown: <br>
+						<input type="text" name="cooldown">
+					</div>
+					<div class="buttonsubmit">
+						<button class="buttonadd">Add Button</button>
+					</div>
+					<div class="connect">
+						<button class="connect">Connect</button>
+					</div>
+				</div>
+			</div>
+			<div class="button-right">
+				<div class="button-right-content">
+					This is where the buttons for the selected game profile will show. You will also be able to delete them here.
+				</div>
+			</div>
+		</div>
+	  </div>
+	  
+	  
+	  <div id="tabs-4">
+		<h2>Log</h2>
+		<p>This will be where the console goes to show what is being pressed.</p>
+	  </div>
+	  
+	  
+	</div>
+</div>
+
+<script>window.$ = window.jQuery = require('./js/jquery-3.1.0.min.js');</script>
+<script src="./js/jquery-ui.min.js"></script>
+<script src="./js/main.js"></script>
+</body>
+</html>

@@ -2,69 +2,57 @@
 	"tactile":{
 		"0":{
 			"id": 0,
-			"key": "numpad_3",
-			"movementCounter": "",
+			"key": "w",
+			"movementCounter": "s",
 			"cooldown": 0
 		},
 		"1":{
 			"id": 1,
-			"key": "up",
-			"movementCounter": "down",
+			"key": "a",
+			"movementCounter": "d",
 			"cooldown": 0
 		},
 		"2":{
 			"id": 2,
-			"key": "left",
-			"movementCounter": "right",
+			"key": "d",
+			"movementCounter": "a",
+			"cooldown": 0
+		},
+		"3":{
+			"id": 3,
+			"key": "s",
+			"movementCounter": "w",
 			"cooldown": 0
 		},
 		"4":{
 			"id": 4,
-			"key": "right",
-			"movementCounter": "left",
+			"key": "z",
+			"movementCounter": "",
 			"cooldown": 0
 		},
 		"5":{
 			"id": 5,
-			"key": "down",
-			"movementCounter": "up",
-			"cooldown": 0
-		},
-		"6":{
-			"id": 6,
-			"key": "numpad_2",
-			"movementCounter": "",
-			"cooldown": 60000
-		},
-		"7":{
-			"id": 7,
-			"key": "numpad_0",
-			"movementCounter": "",
-			"cooldown": 3000
-		},
-		"8":{
-			"id": 8,
-			"key": "numpad_1",
-			"movementCounter": "",
-			"cooldown": 3000
-		},
-		"9":{
-			"id": 9,
-			"key": "numpad_4",
+			"key": "x",
 			"movementCounter": "",
 			"cooldown": 30000
 		},
-		"10":{
-			"id": 10,
-			"key": "numpad_5",
+		"7":{
+			"id": 7,
+			"key": "space",
 			"movementCounter": "",
-			"cooldown": 120000
+			"cooldown": 0
 		},
-		"11":{
-			"id": 11,
-			"key": "numpad_6",
+		"8":{
+			"id": 8,
+			"key": "e",
 			"movementCounter": "",
-			"cooldown": 3000
+			"cooldown": 0
+		},
+		"9":{
+			"id": 9,
+			"key": "f",
+			"movementCounter": "",
+			"cooldown": 0
 		}
 	}
 }

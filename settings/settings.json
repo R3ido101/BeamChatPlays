@@ -1,6 +1,13 @@
 {
-	"screen":{
-		"width": 1920,
-		"height": 1080
+	"gameProfiles":{
+		"gameOne": {
+			"fileName": "gameOne"
+		},
+		"gameTwo": {
+			"fileName": "gameTwo"
+		},
+		"gameThree": {
+			"fileName": "gameThree"
+		}
 	}
 }
