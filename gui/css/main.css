@@ -1,4 +1,5 @@
 /** Global Structure **/
+
 @font-face {
     font-family: ProximaNova;
     src: url('../fonts/proximanova-regular-webfont.ttf');
@@ -7,55 +8,67 @@
 html {
     width: 100vw;
     height: 100vh;
-    background-color: black;
-	background-image: url('../images/bg.jpg');
-	background-size:100%;
+    background-color: #eaeaea;
+    background-size: 100%;
 }
 
 body {
     margin: 0px;
     padding: 0px;
 }
+
 .wrapper {
     background-color: transparent;
 }
-select{
-	padding: .5em;
-	width: 38.5%;
+
+select {
+    padding: .5em;
+    width: 38.5%;
 }
 
-input{
-	padding: .5em;
-	width: 35%;
+input {
+    padding: .5em;
+    width: 35%;
 }
 
-button{
-	border-radius: 5px;
-	background-color: transparent;
-	border: 1px solid white;
-	padding:.25em 1em;
-	color:white;
+button {
+    border-radius: 5px;
+    background-color: transparent;
+    border: 1px solid #2c3743;
+    padding: .25em 1em;
+    color: #2c3743;
 }
-button:hover{
-	background-color: #2b0a4f;
+
+button:hover {
+    background-color: #00adb3;
+    color: white;
 }
-a,a:link, a:visited, a:active{
-	color:white;
+
+a,
+a:link,
+a:visited,
+a:active {
+    color: #2c3743;
 }
-a:hover{
-	color:#9845d6;
+
+a:hover {
+    color: #2c3743;
 }
-.fa{
-	text-align:center;
+
+.fa {
+    text-align: center;
 }
-.fa.square-icon{
-	padding:.14em;
-	background-color:#2b0a4f;
-	font-size:1.5em;
-	width:30px;
-	height:30px;
-	text-align:center;
+
+.fa.square-icon {
+    padding: .14em;
+    background-color: #4f5f6e;
+    font-size: 1.5em;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    color: white;
 }
+
 
 /** Tab Structure **/
 
@@ -73,12 +86,12 @@ a:hover{
 }
 
 .ui-tabs .ui-tabs-nav {
-    background-color: #cecece;
+    background-color: #4f5f6e;
 }
 
 .ui-tabs .ui-tabs-panel {
     flex-grow: 2;
-    color: white;
+    color: #2c3743;
     padding: 0em 0em 0em 1em;
     float: right;
     width: 40em;
@@ -112,8 +125,8 @@ a:hover{
 a.ui-button:active,
 .ui-button:active,
 .ui-button.ui-state-active:hover {
-    background-color: #2b0a4f;
-	border:none;
+    background-color: #2c3743;
+    border: none;
 }
 
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
@@ -121,21 +134,28 @@ a.ui-button:active,
     outline: none;
     padding: .5em;
 }
-.ui-widget{
-	font-family: ProximaNova, Arial, Verdana!important;
+
+.ui-widget {
+    font-family: ProximaNova, Arial, Verdana!important;
 }
-.center-text{
-	text-align:center;
+
+.center-text {
+    text-align: center;
 }
+
+
 /** Welcome Screen **/
-.main-logo{
-	text-align:center;
+
+.main-logo {
+    text-align: center;
 }
-.nnlogo{
-	width:291px;
-	margin:auto;
-	padding:1em;
+
+.nnlogo {
+    width: 291px;
+    margin: auto;
+    padding: 1em;
 }
+
 
 /** Button Tab **/
 
@@ -152,7 +172,7 @@ a.ui-button:active,
     height: 100vh;
     overflow-y: scroll;
     width: 25%;
-    background-color: #cecece;
+    background-color: #4f5f6e;
 }
 
 .button-right-content {
@@ -160,13 +180,25 @@ a.ui-button:active,
     color: black;
 }
 
-.control-entry div, .input-padding{
-	margin: .25em 0em;
+.control-entry div,
+.input-padding {
+    margin: .25em 0em;
 }
 
-.control-dropdown-btns{
-	margin: .5em 0em 1em 0em;
+.control-dropdown-btns {
+    margin: .5em 0em 1em 0em;
 }
+
+.removebutton button {
+    background-color: #4f5f6e;
+    color: white;
+}
+
+.removebutton button:hover {
+    background-color: #00adb3;
+    color: white;
+}
+
 
 /** Button List **/
 
@@ -176,7 +208,7 @@ a.ui-button:active,
 }
 
 .button-header {
-    background-color: #130223;
+    background-color: #2c3743;
     text-align: right;
     padding: .5em;
     font-size: .6em;
@@ -186,11 +218,14 @@ a.ui-button:active,
     padding: .5em;
 }
 
+
 /** Log Panel **/
-.log-wrap{
-	height:100vh;
-	overflow-y:scroll;
+
+.log-wrap {
+    height: 100vh;
+    overflow-y: scroll;
 }
-.log-contents{
-	padding: 1em;
+
+.log-contents {
+    padding: 1em;
 }
