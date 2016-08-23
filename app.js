@@ -24,6 +24,7 @@ gui.on('ready', function() {
         fullscreenable: false,
         icon: __dirname + '/fav.png'
     });
+    //mainWindow.setMenu(null);
 
     // and load the index.html of the app.
     mainWindow.loadURL('file://' + __dirname + '/gui/index.html');

@@ -115,9 +115,9 @@ function beamDisconnect() {
 $('.control-dropdown').on('change', function() {
     var option = $(this).val();
     if (option !== "default") {
-        $('.new-game-profile').fadeOut("fast", function(){
-			$('.control-entry').fadeIn("fast");
-		});
+        $('.new-game-profile').fadeOut("fast", function() {
+            $('.control-entry').fadeIn("fast");
+        });
         // Reload button list.
         gameProfileButtonList();
     } else {
@@ -147,9 +147,9 @@ $('.buttonsubmit .buttonadd').click(function() {
 // When user hits the add profile button show related fields.
 $('.add-profile').click(function() {
     $('.control-dropdown option:eq(0)').prop('selected', true);
-    $('.control-entry').fadeOut("fast", function(){
-		$('.new-game-profile').fadeIn("fast");
-	});
+    $('.control-entry').fadeOut("fast", function() {
+        $('.new-game-profile').fadeIn("fast");
+    });
 });
 
 // When user submits new profile.
@@ -196,8 +196,8 @@ function savedLogin() {
 /////////////////////
 
 ipcRenderer.on('logger', (event, message) => {
-    $('.log-contents').prepend('<div class="log-message">'+message+'</div>');
-	$('.log-message:gt(50)').remove();
+    $('.log-contents').prepend('<div class="log-message">' + message + '</div>');
+    $('.log-message:gt(50)').remove();
 })
 
 /////////////////////////

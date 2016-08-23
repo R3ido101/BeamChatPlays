@@ -7,7 +7,7 @@
     <title>Beam Chat Plays by @firebottletv (beam.pro/firebottle)</title>
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="./css/main.css">
-	<link rel="stylesheet" href="./css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
 </head>
 
 <body>
@@ -20,9 +20,9 @@
                 <li><a href="#tabs-4">Log</a></li>
             </ul>
             <div id="tabs-1">
-				<div class="main-logo"><img src="./images/nnlogo.png" class="nnlogo"></div>
-				<h1 class="center-text">Notorious Interactive</h1>
-				<p class="center-text"><a href="http://firebottle.tv" target="_blank">Created by @Firebottle</a></p>
+                <div class="main-logo"><img src="./images/nnlogo.png" class="nnlogo"></div>
+                <h1 class="center-text">Notorious Interactive</h1>
+                <p class="center-text"><a href="http://firebottle.tv" target="_blank">Created by @Firebottle</a></p>
                 <p class="center-text"><a href="http://notoriousnetwork.com" target="_blank">NotoriousNetwork.com</a></p>
                 <p class="center-text">TIP: Ctrl + Backspace will shut down the program. Useful if you have mouse controls on.</p>
             </div>
@@ -46,65 +46,71 @@
                 </div>
             </div>
             <div id="tabs-3">
+                <h2>Buttons</h2>
+                <p>Select your game profile, or build a new one to edit buttons.</p>
                 <div class="button-wrap">
-                    <div class="button-left">
-                        <h2>Buttons</h2>
-                        <p>Select a game profile from the dropdown, or create a new one. Once a game profile is selected you'll be able to customize your controls. Once done, hit the connect button.</p>
-                        <div class="control-dropdown-wrap">
-                            <div class="fa square-icon fa-bookmark"></div>
-                            <select class="control-dropdown">
-                                <option class="default" value="default" disabled="disabled" selected="selected">Choose Game</option>
-                            </select>
-							<div class="control-dropdown-btns">
-								<button class="add-profile"><div class="fa fa-plus"></div></button>
-								<button class="remove-profile"><div class="fa fa-minus"></div></button>
-							</div>
+                    <div class="button-content">
+                        <div class="button-builder">
+                            <div class="control-dropdown-wrap">
+                                <div class="fa square-icon fa-bookmark"></div>
+                                <select class="control-dropdown">
+                                    <option class="default" value="default" disabled="disabled" selected="selected">Choose Game</option>
+                                </select>
+                                <div class="control-dropdown-btns">
+                                    <button class="add-profile">
+                                        <div class="fa fa-plus"></div>
+                                    </button>
+                                    <button class="remove-profile">
+                                        <div class="fa fa-minus"></div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="control-entry" style="display:none">
+                                <div class="buttonid">
+                                    <div class="fa square-icon fa-gamepad"></div>
+                                    <input type="text" name="buttonid" placeholder="Button ID">
+                                </div>
+                                <div class="key">
+                                    <div class="fa square-icon fa-keyboard-o"></div>
+                                    <input type="text" name="key" placeholder="key">
+                                </div>
+                                <div class="counter">
+                                    <div class="fa square-icon fa-balance-scale"></div>
+                                    <input type="text" name="counter" placeholder="Movement Counter">
+                                </div>
+                                <div class="cooldown">
+                                    <div class="fa square-icon fa-clock-o"></div>
+                                    <input type="text" name="cooldown" placeholder="Global Cooldown">
+                                </div>
+                                <div class="buttonsubmit">
+                                    <button class="buttonadd">Add to Profile</button>
+                                </div>
+                                <div class="beam-connection">
+                                    <button class="beam-connect-btn">Connect to Beam</button>
+                                </div>
+                            </div>
+                            <div class="new-game-profile" style="display:none">
+                                <div class="profile-name input-padding">
+                                    <div class="fa square-icon fa-folder-open"></div>
+                                    <input type="text" name="profile-name" placeholder="Profile Name">
+                                </div>
+                                <div class="profile-submit">
+                                    <button class="profile-add">Add Profile</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="control-entry" style="display:none">
-                            <div class="buttonid">
-								<div class="fa square-icon fa-gamepad"></div>
-                                <input type="text" name="buttonid" placeholder="Button ID">
+                        <div class="button-grid">
+                            <div class="button-right-content">
+                                <div class="default">Select a game profile to see buttons.</div>
                             </div>
-                            <div class="key">
-								<div class="fa square-icon fa-keyboard-o"></div>
-                                <input type="text" name="key" placeholder="key">
-                            </div>
-                            <div class="counter">
-								<div class="fa square-icon fa-balance-scale"></div>
-                                <input type="text" name="counter" placeholder="Movement Counter">
-                            </div>
-                            <div class="cooldown">
-								<div class="fa square-icon fa-clock-o"></div>
-                                <input type="text" name="cooldown" placeholder="Global Cooldown">
-                            </div>
-                            <div class="buttonsubmit">
-                                <button class="buttonadd">Add to Profile</button>
-                            </div>
-                            <div class="beam-connection">
-                                <button class="beam-connect-btn">Connect to Beam</button>
-                            </div>
-                        </div>
-                        <div class="new-game-profile" style="display:none">
-                            <div class="profile-name input-padding">
-                                <div class="fa square-icon fa-folder-open"></div>
-                                <input type="text" name="profile-name" placeholder="Profile Name">
-                            </div>
-                            <div class="profile-submit">
-                                <button class="profile-add">Add Profile</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="button-right">
-                        <div class="button-right-content">
-                            <div class="default">Select a game profile to see buttons.</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="tabs-4">
                 <div class="log-wrap">
-					<div class="log-contents"></div>
-				</div>
+                    <div class="log-contents"></div>
+                </div>
             </div>
         </div>
     </div>
