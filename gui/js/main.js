@@ -3,6 +3,7 @@ var BrowserWindow = remote.BrowserWindow;
 var JsonDB = require('node-json-db');
 const fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
+const shell = require('electron').shell;
 
 var dbAuth = new JsonDB("./settings/auth", true, false);
 var dbSettings = new JsonDB('./settings/settings', true, false);
@@ -16,6 +17,13 @@ $(function() {
 /////////////////////
 // Helpers
 /////////////////////
+
+// Open Link In Browser
+// This opens link in system default browser.
+$(document).on('click', 'a[href^="http"]', function(event) {
+    event.preventDefault();
+    shell.openExternal(this.href);
+});
 
 // Game Profile List
 // This function grabs a list of all saved game profiles.
@@ -107,8 +115,9 @@ function beamDisconnect() {
 $('.control-dropdown').on('change', function() {
     var option = $(this).val();
     if (option !== "default") {
-        $('.control-entry').css('display', 'block');
-        $('.new-game-profile').css('display', 'none');
+        $('.new-game-profile').fadeOut("fast", function(){
+			$('.control-entry').fadeIn("fast");
+		});
         // Reload button list.
         gameProfileButtonList();
     } else {
@@ -138,8 +147,9 @@ $('.buttonsubmit .buttonadd').click(function() {
 // When user hits the add profile button show related fields.
 $('.add-profile').click(function() {
     $('.control-dropdown option:eq(0)').prop('selected', true);
-    $('.new-game-profile').css('display', 'block');
-    $('.control-entry').css('display', 'none');
+    $('.control-entry').fadeOut("fast", function(){
+		$('.new-game-profile').fadeIn("fast");
+	});
 });
 
 // When user submits new profile.
@@ -180,6 +190,15 @@ function savedLogin() {
     $('.username input').val(username);
     $('.password input').val(password);
 }
+
+/////////////////////
+// Log Panel
+/////////////////////
+
+ipcRenderer.on('logger', (event, message) => {
+    $('.log-contents').prepend('<div class="log-message">'+message+'</div>');
+	$('.log-message:gt(50)').remove();
+})
 
 /////////////////////////
 // Initial Load Functions

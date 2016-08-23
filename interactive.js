@@ -1,5 +1,7 @@
 function Interactive(electron, mainWindow) {
     var ipcMain = electron.ipcMain;
+	let {app, BrowserWindow} = require('electron');
+	let win = null;
 
     const Beam = require('beam-client-node');
     const Interactive = require('beam-interactive-node');
@@ -101,6 +103,8 @@ function Interactive(electron, mainWindow) {
                 var buttonID = button['id'];
                 var key = button['key'];
                 var movementCounter = button['movementCounter'];
+                var movementCounter = button['movementCounter'];
+                var movementCounter = button['movementCounter'];
                 var cooldown = button['cooldown'];
 
                 buttonSave(key, holding, press);
@@ -119,7 +123,7 @@ function Interactive(electron, mainWindow) {
                     }
                 }
             } else {
-                console.error("ERROR: Button #" + rawid + " is missing from controls json file. Stopping app.");
+				guiSend("ERROR: Button #" + rawid + " is missing from controls json file. Stopping app.");
                 process.exit();
             }
         }
@@ -151,12 +155,12 @@ function Interactive(electron, mainWindow) {
         var keyTwoPressed = app[movementCounter + 'Save'];
 
         if (keyOne > keyTwo && keyOnePressed === false) {
-            console.log("Movement: " + key + " was pressed.");
+			guiSend("Movement: " + key + " was pressed.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         }
         if (keyTwo > keyOne && keyTwoPressed === false) {
-            console.log("Movement: " + movementCounter + " was pressed.");
+			guiSend("Movement: " + movementCounter + " was pressed.");
             rjs.keyToggle(movementCounter, "down");
             app[movementCounter + 'Save'] = true;
         }
@@ -173,11 +177,11 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Hold
     function tactileHold(key, holding, buttonID, cooldown) {
         if (app[key] > 0 && app[key + 'Save'] !== true) {
-            console.log(key + " is being held down.");
+			guiSend(key + " is being held down.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         } else if (holding === 0 && app[key + 'Save'] !== false) {
-            console.log(key + " is no longer held down.");
+			guiSend(key + " is no longer held down.");
             rjs.keyToggle(key, "up");
             app[key + 'Save'] = false;
         }
@@ -186,7 +190,7 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Tap.
     function tactileTap(key, press, buttonID, cooldown) {
         if (press > 0) {
-            console.log(key + " was pressed.");
+			guiSend(key + " was pressed.");
             rjs.keyToggle(key, "down");
             setTimeout(function() {
                 rjs.keyToggle(key, "up");
@@ -315,6 +319,11 @@ function Interactive(electron, mainWindow) {
         });
         app.joystickProgress = json;
     }
+	
+	// Webcontents Send
+	function guiSend(msg){
+		mainWindow.webContents.send('logger', msg);
+	}
 
     // Connects when connect button is clicked.
     ipcMain.on('beam-connect', function(event, activeProfile) {

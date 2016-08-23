@@ -1,20 +1,61 @@
 /** Global Structure **/
+@font-face {
+    font-family: ProximaNova;
+    src: url('../fonts/proximanova-regular-webfont.ttf');
+}
 
 html {
     width: 100vw;
     height: 100vh;
-    background-color: #1b1e31;
+    background-color: black;
+	background-image: url('../images/bg.jpg');
+	background-size:100%;
 }
 
 body {
     margin: 0px;
     padding: 0px;
 }
-
 .wrapper {
-    background-color: #1b1e31;
+    background-color: transparent;
+}
+select{
+	padding: .5em;
+	width: 38.5%;
 }
 
+input{
+	padding: .5em;
+	width: 35%;
+}
+
+button{
+	border-radius: 5px;
+	background-color: transparent;
+	border: 1px solid white;
+	padding:.25em 1em;
+	color:white;
+}
+button:hover{
+	background-color: #2b0a4f;
+}
+a,a:link, a:visited, a:active{
+	color:white;
+}
+a:hover{
+	color:#9845d6;
+}
+.fa{
+	text-align:center;
+}
+.fa.square-icon{
+	padding:.14em;
+	background-color:#2b0a4f;
+	font-size:1.5em;
+	width:30px;
+	height:30px;
+	text-align:center;
+}
 
 /** Tab Structure **/
 
@@ -71,7 +112,8 @@ body {
 a.ui-button:active,
 .ui-button:active,
 .ui-button.ui-state-active:hover {
-    background-color: #536dfe;
+    background-color: #2b0a4f;
+	border:none;
 }
 
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
@@ -79,7 +121,21 @@ a.ui-button:active,
     outline: none;
     padding: .5em;
 }
-
+.ui-widget{
+	font-family: ProximaNova, Arial, Verdana!important;
+}
+.center-text{
+	text-align:center;
+}
+/** Welcome Screen **/
+.main-logo{
+	text-align:center;
+}
+.nnlogo{
+	width:291px;
+	margin:auto;
+	padding:1em;
+}
 
 /** Button Tab **/
 
@@ -104,6 +160,13 @@ a.ui-button:active,
     color: black;
 }
 
+.control-entry div, .input-padding{
+	margin: .25em 0em;
+}
+
+.control-dropdown-btns{
+	margin: .5em 0em 1em 0em;
+}
 
 /** Button List **/
 
@@ -113,7 +176,7 @@ a.ui-button:active,
 }
 
 .button-header {
-    background-color: white;
+    background-color: #130223;
     text-align: right;
     padding: .5em;
     font-size: .6em;
@@ -121,4 +184,13 @@ a.ui-button:active,
 
 .button-content {
     padding: .5em;
+}
+
+/** Log Panel **/
+.log-wrap{
+	height:100vh;
+	overflow-y:scroll;
+}
+.log-contents{
+	padding: 1em;
 }

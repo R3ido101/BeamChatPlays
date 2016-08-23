@@ -7,6 +7,7 @@
     <title>Beam Chat Plays by @firebottletv (beam.pro/firebottle)</title>
     <link rel="stylesheet" href="./css/jquery-ui.min.css">
     <link rel="stylesheet" href="./css/main.css">
+	<link rel="stylesheet" href="./css/font-awesome.min.css">
 </head>
 
 <body>
@@ -19,9 +20,11 @@
                 <li><a href="#tabs-4">Log</a></li>
             </ul>
             <div id="tabs-1">
-                <h2>Welcome</h2>
-                <p>This is the first window people see. It will show the logo and about information as well as instructions.</p>
-                <p>IMPORTANT: If you ever run into issues, for example you can't get back control of your mouse to stop interactive, press CTRL and Backspace at the same time.</p>
+				<div class="main-logo"><img src="./images/nnlogo.png" class="nnlogo"></div>
+				<h1 class="center-text">Notorious Interactive</h1>
+				<p class="center-text"><a href="http://firebottle.tv" target="_blank">Created by @Firebottle</a></p>
+                <p class="center-text"><a href="http://notoriousnetwork.com" target="_blank">NotoriousNetwork.com</a></p>
+                <p class="center-text">TIP: Ctrl + Backspace will shut down the program. Useful if you have mouse controls on.</p>
             </div>
             <div id="tabs-2">
                 <h2>Login</h2>
@@ -48,44 +51,31 @@
                         <h2>Buttons</h2>
                         <p>Select a game profile from the dropdown, or create a new one. Once a game profile is selected you'll be able to customize your controls. Once done, hit the connect button.</p>
                         <div class="control-dropdown-wrap">
-                            Active Game Profile:
-                            <br>
+                            <div class="fa square-icon fa-bookmark"></div>
                             <select class="control-dropdown">
                                 <option class="default" value="default" disabled="disabled" selected="selected">Choose Game</option>
                             </select>
-                            <button class="add-profile">New</button>
-                            <button class="remove-profile">Delete</button>
-                        </div>
-                        <div class="new-game" style="display:none">
-                            <div class="game-name">
-                                Profile Name:
-                                <br>
-                                <input type="text" name="game-name">
-                            </div>
-                            <div class="game-submit">
-                                <button class="gameadd">Create</button>
-                            </div>
+							<div class="control-dropdown-btns">
+								<button class="add-profile"><div class="fa fa-plus"></div></button>
+								<button class="remove-profile"><div class="fa fa-minus"></div></button>
+							</div>
                         </div>
                         <div class="control-entry" style="display:none">
                             <div class="buttonid">
-                                Button ID:
-                                <br>
-                                <input type="text" name="buttonid">
+								<div class="fa square-icon fa-gamepad"></div>
+                                <input type="text" name="buttonid" placeholder="Button ID">
                             </div>
                             <div class="key">
-                                Key:
-                                <br>
-                                <input type="text" name="key">
+								<div class="fa square-icon fa-keyboard-o"></div>
+                                <input type="text" name="key" placeholder="key">
                             </div>
                             <div class="counter">
-                                Movement Counter:
-                                <br>
-                                <input type="text" name="counter">
+								<div class="fa square-icon fa-balance-scale"></div>
+                                <input type="text" name="counter" placeholder="Movement Counter">
                             </div>
                             <div class="cooldown">
-                                Global Cooldown:
-                                <br>
-                                <input type="text" name="cooldown">
+								<div class="fa square-icon fa-clock-o"></div>
+                                <input type="text" name="cooldown" placeholder="Global Cooldown">
                             </div>
                             <div class="buttonsubmit">
                                 <button class="buttonadd">Add to Profile</button>
@@ -95,10 +85,9 @@
                             </div>
                         </div>
                         <div class="new-game-profile" style="display:none">
-                            <div class="profile-name">
-                                Profile Name:
-                                <br>
-                                <input type="text" name="profile-name">
+                            <div class="profile-name input-padding">
+                                <div class="fa square-icon fa-folder-open"></div>
+                                <input type="text" name="profile-name" placeholder="Profile Name">
                             </div>
                             <div class="profile-submit">
                                 <button class="profile-add">Add Profile</button>
@@ -113,8 +102,9 @@
                 </div>
             </div>
             <div id="tabs-4">
-                <h2>Log</h2>
-                <p>This will be where the console goes to show what is being pressed.</p>
+                <div class="log-wrap">
+					<div class="log-contents"></div>
+				</div>
             </div>
         </div>
     </div>
