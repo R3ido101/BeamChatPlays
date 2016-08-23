@@ -5,15 +5,12 @@
     src: url('../fonts/proximanova-regular-webfont.ttf');
 }
 
-html {
+html, body{
     width: 100vw;
     height: 100vh;
     background-color: #eaeaea;
     background-size: 100%;
-}
-
-body {
-    margin: 0px;
+	margin: 0px;
     padding: 0px;
 }
 
@@ -70,8 +67,8 @@ a:hover {
 
 #tabs {
     display: flex;
+	min-height:100vh;
     width: 100vw;
-    height: 100vh;
     margin: 0px;
     padding: 0px;
     background-color: transparent;
@@ -155,19 +152,8 @@ a.ui-button:active,
 
 /** Button Tab **/
 
-.button-content {
-    width: 100%;
-    display: flex;
-}
-
-.button-builder {
-    width: 49%;
-    vertical-align: top;
-}
-
-.button-grid {
-    vertical-align: top;
-    width: 39%;
+.button-list-item{
+	vertical-align:top;
 }
 
 .button-right-content {

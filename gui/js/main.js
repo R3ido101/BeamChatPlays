@@ -55,7 +55,7 @@ function gameProfileButtonList() {
         var movecounter = buttonArray[i].movementCounter;
         var cooldown = buttonArray[i].cooldown;
 
-        $('.button-right-content').append('<div class="button-list-item"><div class="button-header"><div class="removebutton"><button class="remove" onclick="gameProfileButtonRemove(' + buttonid + ')">X</button></div></div><div class="button-content"><div class="buttonid">ID: ' + buttonid + '</div><div class="buttonkey">Key Press:' + keypress + '</div><div class="movementCounter">Counter: ' + movecounter + '</div><div class="cooldown">Cooldown: ' + cooldown + '</div></div></div>');
+        $('.button-right-content').append('<div class="button-list-item .col-md-4"><div class="button-header"><div class="removebutton"><button class="remove" onclick="gameProfileButtonRemove(' + buttonid + ')">X</button></div></div><div class="button-content"><div class="buttonid">ID: ' + buttonid + '</div><div class="buttonkey">Key Press:' + keypress + '</div><div class="movementCounter">Counter: ' + movecounter + '</div><div class="cooldown">Cooldown: ' + cooldown + '</div></div></div>');
     }
 }
 
