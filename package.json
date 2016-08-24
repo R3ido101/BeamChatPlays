@@ -14,12 +14,11 @@
     },
     "scripts": {
         "start": "electron app.js",
-        "pack:win32": "electron-packager . BeamChatPlays --out=dist/win --platform=win32 --arch=ia32",
-        "pack:win64": "electron-packager . BeamChatPlays --out=dist/win --platform=win32 --arch=x64 --version=1.3.3 app-version=1.0 --icon=./win.ico",
+        "pack:win32": "electron-packager . BeamChatPlays --out=./dist/win --platform=win32 --arch=ia32",
+        "pack:win64": "electron-packager . BeamChatPlays --out=./dist/win --platform=win32 --arch=x64 --version=1.3.3 app-version=1.0",
         "build": "npm run pack:win32 && npm run pack:win64"
     },
     "devDependencies": {
-        "electron-builder": "^5.34.1",
         "electron-packager": "^7.7.0",
         "electron-prebuilt": "^1.3.3",
         "electron-rebuild": "^1.2.0"
