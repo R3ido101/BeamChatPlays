@@ -25,6 +25,14 @@ $(document).on('click', 'a[href^="http"]', function(event) {
     shell.openExternal(this.href);
 });
 
+$(document).tooltip({
+    position: { my: "left+15 center", at: "right center" }
+});
+
+// Start up field validation.
+$('#button-adder').parsley();
+$('#profile-adder').parsley();
+
 // Game Profile List
 // This function grabs a list of all saved game profiles.
 function gameProfileList() {
@@ -34,7 +42,7 @@ function gameProfileList() {
 
     var games = Object.keys(dbSettings.getData("/gameProfiles"));
     for (var i = 0, length = games.length; i < length; i++) {
-        $('.control-dropdown').append('<option value="' + games[i] + '">' + games[i] + '</option>');
+        $('.control-dropdown, .active-profile-dropdown').append('<option value="' + games[i] + '">' + games[i] + '</option>');
     }
 }
 
@@ -42,21 +50,30 @@ function gameProfileList() {
 // This function reads the current game profile and populates the button list.
 function gameProfileButtonList() {
     $('.button-right-content').empty();
-    var activeProfile = $('.control-dropdown').val();
-    var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
-    var gameProfile = dbControls.getData("/tactile");
-    var buttonArray = $.map(gameProfile, function(el) {
-        return el
+
+    $('.button-right-content').fadeOut("fast", function() {
+        $('.button-right-content').empty();
+        var activeProfile = $('.control-dropdown').val();
+        var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
+        var gameProfile = dbControls.getData("/tactile");
+        var buttonArray = $.map(gameProfile, function(el) {
+            return el
+        });
+
+        for (var i = 0; i < buttonArray.length; i++) {
+            var buttonid = buttonArray[i].id;
+            var keypress = buttonArray[i].key;
+            var movecounter = buttonArray[i].movementCounter;
+            var cooldown = buttonArray[i].cooldown;
+
+            if (movecounter == "") {
+                var movecounter = "None";
+            }
+
+            $('.button-right-content').append('<div class="button-list-item col-md-3"><div class="button-header"><div class="buttonid">' + buttonid + '</div><div class="removebutton"><button class="remove" onclick=gameProfileButtonRemove("' + buttonid + '")>X</button></div></div><div class="button-content"><div class="buttonkey"><span class="button-option">Key Press:</span><br>' + keypress + '</div><div class="movementCounter"><span class="button-option">Counter:</span><br>' + movecounter + '</div><div class="cooldown"><span class="button-option">Cooldown:</span><br>' + cooldown + ' sec.</div></div></div>');
+        }
+        $('.button-right-content').fadeIn("fast");
     });
-
-    for (var i = 0; i < buttonArray.length; i++) {
-        var buttonid = buttonArray[i].id;
-        var keypress = buttonArray[i].key;
-        var movecounter = buttonArray[i].movementCounter;
-        var cooldown = buttonArray[i].cooldown;
-
-        $('.button-right-content').append('<div class="button-list-item .col-md-4"><div class="button-header"><div class="removebutton"><button class="remove" onclick=gameProfileButtonRemove("' + buttonid + ')">X</button></div></div><div class="button-content"><div class="buttonid">ID: ' + buttonid + '</div><div class="buttonkey">Key Press: ' + keypress + '</div><div class="movementCounter">Counter: ' + movecounter + '</div><div class="cooldown">Cooldown: ' + cooldown + '</div></div></div>');
-    }
 }
 
 // Remove Button
@@ -75,12 +92,16 @@ function gameProfileButtonRemove(buttonid) {
 // Add Game Profile
 // This adds a new game profile and refreshes the dropdown menu.
 function gameProfileAdd() {
-    var profileName = $('.profile-name input').val();
-    var dbControls = new JsonDB("./controls/" + profileName, true, false);
-    dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
-    dbControls.push('/' + profileName);
-    $('.profile-name input').val("");
-    gameProfileList();
+    $('#profile-adder').parsley().on('form:submit', function() {
+        var profileName = $('.profile-name input').val();
+        var dbControls = new JsonDB("./controls/" + profileName, true, false);
+        dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
+        dbControls.push('/' + profileName);
+        $('.profile-name input').val("").removeClass('parsley-success');
+        gameProfileList();
+
+        return false;
+    });
 }
 
 // Remove Game Profile
@@ -107,6 +128,29 @@ function beamDisconnect() {
     ipcRenderer.send('beam-disconnect');
 }
 
+// Add button to game profile
+function addButtonToProfile() {
+
+    $('#button-adder').parsley().on('form:submit', function() {
+        var activeProfile = $('.control-dropdown').val();
+        var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
+
+        var buttonid = $('.control-entry .buttonid input').val();
+        var keypress = $('.control-entry .key input').val();
+        var movecounter = $('.control-entry .counter input').val();
+        var cooldown = $('.control-entry .cooldown input').val();
+
+        // Push to DB.
+        dbControls.push("/tactile/" + buttonid, { "id": buttonid, "key": keypress, "movementCounter": movecounter, "cooldown": cooldown });
+
+        // Clean up inputs
+        $('.control-entry input').val("").removeClass('parsley-success');
+
+        gameProfileButtonList();
+        return false;
+    });
+}
+
 /////////////////////
 // BUTTONS PANEL
 /////////////////////
@@ -127,21 +171,12 @@ $('.control-dropdown').on('change', function() {
 
 // When user clicks the add button to profile button, get entered info and submit to profile.
 $('.buttonsubmit .buttonadd').click(function() {
-    var activeProfile = $('.control-dropdown').val();
-    var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
-
-    var buttonid = $('.control-entry .buttonid input').val();
-    var keypress = $('.control-entry .key input').val();
-    var movecounter = $('.control-entry .counter input').val();
-    var cooldown = $('.control-entry .cooldown input').val();
-
-    // Push to DB.
-    dbControls.push("/tactile/" + buttonid, { "id": buttonid, "key": keypress, "movementCounter": movecounter, "cooldown": cooldown });
+    // Add button to profile
+    addButtonToProfile();
 
     // Reload button list.
     gameProfileButtonList();
 
-    $('.control-entry input').val("");
 });
 
 // When user hits the add profile button show related fields.

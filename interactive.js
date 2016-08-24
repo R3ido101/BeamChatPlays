@@ -1,7 +1,7 @@
 function Interactive(electron, mainWindow) {
     var ipcMain = electron.ipcMain;
-	let {app, BrowserWindow} = require('electron');
-	let win = null;
+    let { app, BrowserWindow } = require('electron');
+    let win = null;
 
     const Beam = require('beam-client-node');
     const Interactive = require('beam-interactive-node');
@@ -15,7 +15,6 @@ function Interactive(electron, mainWindow) {
         // Global Vars
         app = {
             auth: require('./settings/auth.json'),
-            controls: require('./controls/current.json'),
             settings: require('./settings/settings.json')
         }
 
@@ -103,27 +102,25 @@ function Interactive(electron, mainWindow) {
                 var buttonID = button['id'];
                 var key = button['key'];
                 var movementCounter = button['movementCounter'];
-                var movementCounter = button['movementCounter'];
-                var movementCounter = button['movementCounter'];
                 var cooldown = button['cooldown'];
 
                 buttonSave(key, holding, press);
 
                 if (isNaN(movementCounter) === true && movementCounter !== null && movementCounter !== undefined && movementCounter !== "") {
 
-                    movement(key, movementCounter, buttonID, cooldown);
+                    movement(key, movementCounter, buttonID);
 
                 } else {
                     if (isNaN(holding) === false) {
-                        tactileHold(key, holding, buttonID, cooldown);
+                        tactileHold(key, holding, buttonID);
                     }
 
                     if (isNaN(press) === false) {
-                        tactileTap(key, press, buttonID, cooldown);
+                        tactileTap(key, press, buttonID);
                     }
                 }
             } else {
-				guiSend("ERROR: Button #" + rawid + " is missing from controls json file. Stopping app.");
+                guiSend("ERROR: Button #" + rawid + " is missing from controls json file. Stopping app.");
                 process.exit();
             }
         }
@@ -147,7 +144,7 @@ function Interactive(electron, mainWindow) {
     }
 
     // Movement Keys
-    function movement(key, movementCounter, buttonID, cooldown) {
+    function movement(key, movementCounter, buttonID) {
 
         var keyOne = app[key];
         var keyOnePressed = app[key + 'Save'];
@@ -155,12 +152,12 @@ function Interactive(electron, mainWindow) {
         var keyTwoPressed = app[movementCounter + 'Save'];
 
         if (keyOne > keyTwo && keyOnePressed === false) {
-			guiSend("Movement: " + key + " was pressed.");
+            guiSend("Movement: " + key + " was pressed.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         }
         if (keyTwo > keyOne && keyTwoPressed === false) {
-			guiSend("Movement: " + movementCounter + " was pressed.");
+            guiSend("Movement: " + movementCounter + " was pressed.");
             rjs.keyToggle(movementCounter, "down");
             app[movementCounter + 'Save'] = true;
         }
@@ -175,22 +172,22 @@ function Interactive(electron, mainWindow) {
     }
 
     // Tactile Key Hold
-    function tactileHold(key, holding, buttonID, cooldown) {
+    function tactileHold(key, holding, buttonID) {
         if (app[key] > 0 && app[key + 'Save'] !== true) {
-			guiSend(key + " is being held down.");
+            guiSend(key + " is being held down.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         } else if (holding === 0 && app[key + 'Save'] !== false) {
-			guiSend(key + " is no longer held down.");
+            guiSend(key + " is no longer held down.");
             rjs.keyToggle(key, "up");
             app[key + 'Save'] = false;
         }
     }
 
     // Tactile Key Tap.
-    function tactileTap(key, press, buttonID, cooldown) {
+    function tactileTap(key, press, buttonID) {
         if (press > 0) {
-			guiSend(key + " was pressed.");
+            guiSend(key + " was pressed.");
             rjs.keyToggle(key, "down");
             setTimeout(function() {
                 rjs.keyToggle(key, "up");
@@ -257,6 +254,9 @@ function Interactive(electron, mainWindow) {
             var button = controls.tactile[rawid]
             var cooldown = button['cooldown'];
 
+            // Convert JSON Cooldown Number to Milliseconds
+            var cooldown = cooldown * 1000;
+
             if (isNaN(holding) === false && holding > 0 || isNaN(press) === false && press > 0) {
                 json.push({
                     "id": rawid,
@@ -319,11 +319,11 @@ function Interactive(electron, mainWindow) {
         });
         app.joystickProgress = json;
     }
-	
-	// Webcontents Send
-	function guiSend(msg){
-		mainWindow.webContents.send('logger', msg);
-	}
+
+    // Webcontents Send
+    function guiSend(msg) {
+        mainWindow.webContents.send('logger', msg);
+    }
 
     // Connects when connect button is clicked.
     ipcMain.on('beam-connect', function(event, activeProfile) {
