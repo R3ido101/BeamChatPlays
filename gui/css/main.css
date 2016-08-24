@@ -54,6 +54,15 @@ a:hover {
 
 h1 {
     font-size: 3em;
+    color: #4f5f6e;
+}
+
+.logo {
+    text-align: center;
+}
+
+.logo img {
+    width: 250px;
 }
 
 
@@ -238,6 +247,26 @@ a.ui-button:active,
 
 .log-contents {
     padding: 1em;
+}
+
+
+/** Tips **/
+
+.tips {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+}
+
+.tip-content {
+    margin: auto;
+    width: 90%;
+    text-align: center;
+    border: 1px solid #4f5f6e;
+    border-radius: 5px;
+    background-color: white;
+    padding: 5px 5px 5px 5px;
 }
 
 

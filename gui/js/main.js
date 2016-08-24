@@ -151,6 +151,14 @@ function addButtonToProfile() {
     });
 }
 
+// Tip Popup
+function tips() {
+    $('.tips').fadeIn("fast").delay(10000).fadeOut("fast");
+    window.setTimeout(function() {
+        $('.tips').fadeIn("fast").delay(10000).fadeOut("fast");
+    }, 600000);
+}
+
 /////////////////////
 // BUTTONS PANEL
 /////////////////////
@@ -240,3 +248,4 @@ ipcRenderer.on('logger', (event, message) => {
 /////////////////////////
 gameProfileList();
 savedLogin();
+tips();
