@@ -17,9 +17,9 @@ gui.on('window-all-closed', function() {
 gui.on('ready', function() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 1000,
+        width: 1100,
         minHeight: 500,
-        minWidth: 500,
+        minWidth: 50,
         minHeight: 300,
         fullscreenable: false,
         icon: __dirname + '/fav.png'
@@ -32,6 +32,11 @@ gui.on('ready', function() {
     // Load up interactive
     var interactive = new Interactive(electron, mainWindow);
 
+	process.on('uncaughtException', function (error) {
+		// Handle the error
+		console.error(error);
+	});
+	
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
         mainWindow = null;
