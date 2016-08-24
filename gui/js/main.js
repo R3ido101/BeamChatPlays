@@ -36,7 +36,7 @@ $('#profile-adder').parsley();
 // Game Profile List
 // This function grabs a list of all saved game profiles.
 function gameProfileList() {
-    $(".control-dropdown option").not(".control-dropdown .default").each(function() {
+    $(".control-dropdown option, .active-profile-dropdown option").not(".control-dropdown .default").each(function() {
         $(this).remove();
     });
 
