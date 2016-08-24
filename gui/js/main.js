@@ -76,27 +76,14 @@ function gameProfileButtonList() {
     });
 }
 
-// Remove Button
-// This removes the current button from the game profile.
-function gameProfileButtonRemove(buttonid) {
-    var activeProfile = $('.control-dropdown').val();
-    var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
-
-    // Remove button from json.
-    dbControls.delete("/tactile/" + buttonid);
-
-    // Reload button list.
-    gameProfileButtonList();
-}
-
 // Add Game Profile
 // This adds a new game profile and refreshes the dropdown menu.
 function gameProfileAdd() {
     $('#profile-adder').parsley().on('form:submit', function() {
         var profileName = $('.profile-name input').val();
         var dbControls = new JsonDB("./controls/" + profileName, true, false);
+        dbControls.push('/tactile', "");
         dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
-        dbControls.push('/' + profileName);
         $('.profile-name input').val("").removeClass('parsley-success');
         gameProfileList();
 
@@ -143,12 +130,26 @@ function addButtonToProfile() {
         // Push to DB.
         dbControls.push("/tactile/" + buttonid, { "id": buttonid, "key": keypress, "movementCounter": movecounter, "cooldown": cooldown });
 
+        gameProfileButtonList();
+
         // Clean up inputs
         $('.control-entry input').val("").removeClass('parsley-success');
 
-        gameProfileButtonList();
         return false;
     });
+}
+
+// Remove Button
+// This removes the current button from the game profile.
+function gameProfileButtonRemove(buttonid) {
+    var activeProfile = $('.control-dropdown').val();
+    var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
+
+    // Remove button from json.
+    dbControls.delete("/tactile/" + buttonid);
+
+    // Reload button list.
+    gameProfileButtonList();
 }
 
 // Tip Popup
