@@ -34,6 +34,76 @@ $(document).tooltip({
 $('#button-adder').parsley();
 $('#profile-adder').parsley();
 
+function authBeam() {
+    var options = {
+        client_id: '256e0678a231e8fff721e476d6eb0b43cada80730bd771a4',
+        scopes: ["user:details:self", "interactive:manage:self", "interactive:robot:self", ] // Scopes limit access for OAuth tokens.
+    };
+
+    var authWindow = new BrowserWindow({
+        width: 400,
+        height: 600,
+        resizable: false,
+        alwaysOnTop: true,
+        transparent: true,
+        show: false,
+        webPreferences: {
+            nodeIntegration: false,
+            partition: 'persist:interactive'
+        }
+    });
+
+    var url = "https://beam.pro/oauth/authorize?";
+    var authUrl = url + "client_id=" + options.client_id + "&scope=" + options.scopes.join(' ') + "&redirect_uri=http://localhost/callback" + "&response_type=token";
+    authWindow.loadURL(encodeURI(authUrl));
+    authWindow.show();
+
+    function handleCallback(url) {
+        var raw_token = /token=([^&]*)/.exec(url) || null;
+        var token = (raw_token && raw_token.length > 1) ? raw_token[1] : null;
+        var error = /\?error=(.+)$/.exec(url);
+
+
+        if (token) {
+            requestBeamData(token, authWindow)
+        }
+        if (error) {
+            authWindow.close();
+        }
+    }
+
+    authWindow.webContents.on('will-navigate', function(event, url) {
+        handleCallback(url);
+    });
+
+    authWindow.webContents.on('did-get-redirect-request', function(event, oldUrl, newUrl) {
+
+        handleCallback(newUrl);
+    });
+
+    // Reset the authWindow on close
+    authWindow.on('close', function() {
+        authWindow = null;
+    }, false);
+}
+
+requestBeamData = function(token, authWindow) {
+    request({
+        url: 'https://beam.pro/api/v1/users/current',
+        auth: {
+            'bearer': token
+        }
+    }, function(err, res) {
+        var data = JSON.parse(res.body);
+        //TODO: Save your data + token.
+        dbAuth.push('/', { "channelID": data.channel.id, "username": data.username, "token": token, "level": data.level, "experience": data.experience, "verified": data.verified, "avatarUrl": data.avatarUrl });
+        $('.user-profile .avatar').html('<img src="' + data.avatarUrl + '">');
+        $('.user-profile .username').html(data.username + ' #' + data.channel.id);
+
+        authWindow.close()
+    });
+};
+
 // Game Profile List
 // This function grabs a list of all saved game profiles.
 function gameProfileList() {
@@ -221,30 +291,6 @@ $('.beam-connect-btn').click(function() {
 });
 
 /////////////////////
-// Login Panel
-/////////////////////
-
-// When login button is clicked send saved info to json.
-$('.login .login-btn').click(function() {
-    var username = $('.username input').val();
-    var password = $('.password input').val();
-
-    $.get("https://beam.pro/api/v1/channels/" + username + "?fields=id", function(data) {
-        var channelID = data.id;
-        dbAuth.push('/', { "channelID": channelID, "username": username, "password": password });
-    })
-});
-
-// When app first loaded, put saved username in username field.
-function savedLogin() {
-    var saved = dbAuth.getData("/");
-    var username = saved.username;
-    var password = saved.password;
-    $('.username input').val(username);
-    $('.password input').val(password);
-}
-
-/////////////////////
 // Log Panel
 /////////////////////
 
@@ -265,66 +311,4 @@ ipcRenderer.on('disconnected', (event, message) => {
 // Initial Load Functions
 /////////////////////////
 gameProfileList();
-savedLogin();
 tips();
-
-
-function authBeam () {
-    var options = {
-        client_id: 'bf8eacfe522ee39c45486b137bab30b1aa9bca5b49240c7d',
-        scopes: ["user:details:self", "interactive:manage:self","interactive:robot:self", ] // Scopes limit access for OAuth tokens.
-    };
-    
-    var authWindow = new BrowserWindow({ width: 400, height: 600,resizable: false,alwaysOnTop : true, transparent: true, frame: false ,show: false,   webPreferences: {
-        nodeIntegration: false,
-        partition: 'persist:interactive'
-    } });
-    
-    var url = "https://beam.pro/oauth/authorize?";
-    var authUrl = url + "client_id=" + options.client_id + "&scope=" + options.scopes.join(' ') + "&redirect_uri=http://localhost/callback" + "&response_type=token";
-    authWindow.loadURL(encodeURI(authUrl));
-    authWindow.show();
-    
-    function handleCallback (url) {
-        var raw_token = /token=([^&]*)/.exec (url) || null;
-        var token = (raw_token && raw_token.length > 1) ? raw_token[1] : null;
-        var error = /\?error=(.+)$/.exec (url);
-        
-        
-        if(token){
-            requestBeamData(token,authWindow)
-        }
-        if(error){
-            authWindow.close();
-        }
-    }
-    
-    authWindow.webContents.on('will-navigate', function (event, url) {
-        handleCallback(url);
-    });
-    
-    authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-        
-        handleCallback(newUrl);
-    });
-
-    // Reset the authWindow on close
-    authWindow.on('close', function() {
-        authWindow = null;
-    }, false);
-}
-
-requestBeamData = function (token, authWindow) {
-    request({
-        url: 'https://beam.pro/api/v1/users/current',
-        auth: {
-            'bearer': token
-        }
-    }, function(err, res) {
-        var data = JSON.parse(res.body);
-        //TODO: Save your data + token.
-        console.log({username: data.username, id: data.id, level: data.level, verified: data.verified, experience: data.experience, avatarUrl: data.avatarUrl})
-        authWindow.close()
-    });
-};
-

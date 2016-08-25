@@ -16,16 +16,20 @@ function Interactive(electron, mainWindow) {
         app = {
             auth: require('./settings/auth.json'),
             settings: require('./settings/settings.json'),
-            controls: require('./controls/' + activeProfile + '.json')
+            controls: require('./controls/' + activeProfile + '.json'),
+            clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4"
         }
 
-        channelId = app.auth['channelID'];
-        username = app.auth['username'];
-        password = app.auth['password'];
+        const clientId = app.clientID;
+        const channelId = app.auth['channelID'];
+        const token = app.auth['token'];
 
-        beam.use('password', {
-                username,
-                password,
+        beam.use('oauth', {
+                clientId: clientId,
+                token: {
+                    access: "token",
+                    expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
+                },
             })
             .attempt()
             .then(() => beam.game.join(channelId))
@@ -33,8 +37,6 @@ function Interactive(electron, mainWindow) {
             .then(robot => performRobotHandShake(robot))
             .then(robot => setupRobotEvents(robot))
             .catch(err => {
-                guiLogger(err.message.body.message);
-                console.log(err.message.body.message);
                 if (err.res) {
                     guiLogger('Error connecting to Interactive.');
                     guiEvent('disconnected', 'Disconnected from Interactive.');

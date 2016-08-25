@@ -29,30 +29,22 @@
                 <p class="center-text"><a href="http://notoriousnetwork.com" target="_blank">NotoriousNetwork.com</a></p>
             </div>
             <div id="tabs-2">
-                <h2>Login</h2>
-                <p>Enter your beam.pro username and password. This info is saved and used each time you connect with interactive controls.</p>
-                <div class="login">
-                    <div class="username">
-                        Username
-                        <br>
-                        <input type="text" name="username">
-                    </div>
-                    <div class="password">
-                        Password
-                        <br>
-                        <input type="password" name="password">
-                    </div>
-                    <div class="loginsubmit">
-                        <button class="login-btn">Save</button>
-                    </div>
+                <h2>OAuth Login</h2>
+                <p>The login button below will take you to Beam's OAuth page to grant access to this app to run interactive games on your account.</p>
+                <div class="user-profile">
+                    <div class="avatar"></div>
+                    <div class="username"></div>
                 </div>
-
-                <h2>Login - Oauth</h2>
-                <p></p>
                 <div class="login">
                     <div>
                         <button class="login-btn" onclick="javascript:authBeam();">Login</button>
                     </div>
+                </div>
+                <div class="oauth-details">
+                    <h3>Permission Explanation</h3>
+                    <p>"Create, Update, and delete the interactive games in your account." - Will be used in the future to hopefully create devlab interactive boards via the app.</p>
+                    <p>"View your email address and other private details." - Need this to get your channel id which is used in interactive connections.</p>
+                    <p>"Run as an interactive game on your channel." - This is needed to start up the interactive game.</p>
                 </div>
             </div>
             <div id="tabs-3">
