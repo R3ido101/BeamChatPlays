@@ -4,6 +4,7 @@ var JsonDB = require('node-json-db');
 const fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 const shell = require('electron').shell;
+const request = require('request');
 
 var dbAuth = new JsonDB("./settings/auth", true, false);
 var dbSettings = new JsonDB('./settings/settings', true, false);
@@ -258,3 +259,64 @@ ipcRenderer.on('logger', (event, message) => {
 gameProfileList();
 savedLogin();
 tips();
+
+
+function authBeam () {
+    var options = {
+        client_id: 'bf8eacfe522ee39c45486b137bab30b1aa9bca5b49240c7d',
+        scopes: ["user:details:self", "interactive:manage:self","interactive:robot:self", ] // Scopes limit access for OAuth tokens.
+    };
+    
+    var authWindow = new BrowserWindow({ width: 400, height: 600,resizable: false,alwaysOnTop : true, transparent: true, frame: false ,show: false,   webPreferences: {
+        nodeIntegration: false,
+        partition: 'persist:interactive'
+    } });
+    
+    var url = "https://beam.pro/oauth/authorize?";
+    var authUrl = url + "client_id=" + options.client_id + "&scope=" + options.scopes.join(' ') + "&redirect_uri=http://localhost/callback" + "&response_type=token";
+    authWindow.loadURL(encodeURI(authUrl));
+    authWindow.show();
+    
+    function handleCallback (url) {
+        var raw_token = /token=([^&]*)/.exec (url) || null;
+        var token = (raw_token && raw_token.length > 1) ? raw_token[1] : null;
+        var error = /\?error=(.+)$/.exec (url);
+        
+        
+        if(token){
+            requestBeamData(token,authWindow)
+        }
+        if(error){
+            authWindow.close();
+        }
+    }
+    
+    authWindow.webContents.on('will-navigate', function (event, url) {
+        handleCallback(url);
+    });
+    
+    authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
+        
+        handleCallback(newUrl);
+    });
+
+    // Reset the authWindow on close
+    authWindow.on('close', function() {
+        authWindow = null;
+    }, false);
+}
+
+requestBeamData = function (token, authWindow) {
+    request({
+        url: 'https://beam.pro/api/v1/users/current',
+        auth: {
+            'bearer': token
+        }
+    }, function(err, res) {
+        var data = JSON.parse(res.body);
+        //TODO: Save your data + token.
+        console.log({username: data.username, id: data.id, level: data.level, verified: data.verified, experience: data.experience, avatarUrl: data.avatarUrl})
+        authWindow.close()
+    });
+};
+
