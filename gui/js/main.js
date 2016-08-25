@@ -55,24 +55,32 @@ function gameProfileButtonList() {
         $('.button-right-content').empty();
         var activeProfile = $('.control-dropdown').val();
         var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
-        var gameProfile = dbControls.getData("/tactile");
-        var buttonArray = $.map(gameProfile, function(el) {
-            return el
-        });
+		
+		try {
+			
+			var gameProfile = dbControls.getData("/tactile");
+			var buttonArray = $.map(gameProfile, function(el) {
+				return el
+			});
 
-        for (var i = 0; i < buttonArray.length; i++) {
-            var buttonid = buttonArray[i].id;
-            var keypress = buttonArray[i].key;
-            var movecounter = buttonArray[i].movementCounter;
-            var cooldown = buttonArray[i].cooldown;
+			for (var i = 0; i < buttonArray.length; i++) {
+				var buttonid = buttonArray[i].id;
+				var keypress = buttonArray[i].key;
+				var movecounter = buttonArray[i].movementCounter;
+				var cooldown = buttonArray[i].cooldown;
 
-            if (movecounter == "") {
-                var movecounter = "None";
-            }
+				if (movecounter == "") {
+					var movecounter = "None";
+				}
 
-            $('.button-right-content').append('<div class="button-list-item col-md-3"><div class="button-header"><div class="buttonid">' + buttonid + '</div><div class="removebutton"><button class="remove" onclick=gameProfileButtonRemove("' + buttonid + '")>X</button></div></div><div class="button-content"><div class="buttonkey"><span class="button-option">Key Press:</span><br>' + keypress + '</div><div class="movementCounter"><span class="button-option">Counter:</span><br>' + movecounter + '</div><div class="cooldown"><span class="button-option">Cooldown:</span><br>' + cooldown + ' sec.</div></div></div>');
-        }
-        $('.button-right-content').fadeIn("fast");
+				$('.button-right-content').append('<div class="button-list-item col-md-3"><div class="button-header"><div class="buttonid">' + buttonid + '</div><div class="removebutton"><button class="remove" onclick=gameProfileButtonRemove("' + buttonid + '")>X</button></div></div><div class="button-content"><div class="buttonkey"><span class="button-option">Key Press:</span><br>' + keypress + '</div><div class="movementCounter"><span class="button-option">Counter:</span><br>' + movecounter + '</div><div class="cooldown"><span class="button-option">Cooldown:</span><br>' + cooldown + ' sec.</div></div></div>');
+			}
+			$('.button-right-content').fadeIn("fast");
+			
+		} catch(error){
+			console.log(error);
+		}
+
     });
 }
 
@@ -82,7 +90,6 @@ function gameProfileAdd() {
     $('#profile-adder').parsley().on('form:submit', function() {
         var profileName = $('.profile-name input').val();
         var dbControls = new JsonDB("./controls/" + profileName, true, false);
-        dbControls.push('/tactile', "");
         dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
         $('.profile-name input').val("").removeClass('parsley-success');
         gameProfileList();
@@ -106,7 +113,7 @@ function gameProfileRemove() {
 
 // Beam Interactive Connect
 function beamConnect() {
-    var activeProfile = $('.control-dropdown').val();
+    var activeProfile = $('.active-profile-dropdown').val();
     ipcRenderer.send('beam-connect', activeProfile);
 }
 
@@ -119,6 +126,7 @@ function beamDisconnect() {
 function addButtonToProfile() {
 
     $('#button-adder').parsley().on('form:submit', function() {
+		
         var activeProfile = $('.control-dropdown').val();
         var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
 

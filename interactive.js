@@ -10,12 +10,13 @@ function Interactive(electron, mainWindow) {
     const beam = new Beam();
 
     // Connects to interactive
-    function beamConnect() {
+    function beamConnect(activeProfile) {
 
         // Global Vars
         app = {
             auth: require('./settings/auth.json'),
-            settings: require('./settings/settings.json')
+            settings: require('./settings/settings.json'),
+			controls: require('./controls/' + activeProfile + '.json')
         }
 
         channelId = app.auth['channelID'];
@@ -90,6 +91,7 @@ function Interactive(electron, mainWindow) {
 
     // Tactile Handler
     function tactile(tactile) {
+		
         for (i = 0; i < tactile.length; i++) {
             // Get Button Settings for ID
             var rawid = tactile[i].id;
@@ -255,7 +257,7 @@ function Interactive(electron, mainWindow) {
             var cooldown = button['cooldown'];
 
             // Convert JSON Cooldown Number to Milliseconds
-            var cooldown = cooldown * 1000;
+            var cooldown = parseInt(cooldown) * 1000;
 
             if (isNaN(holding) === false && holding > 0 || isNaN(press) === false && press > 0) {
                 json.push({
@@ -327,12 +329,8 @@ function Interactive(electron, mainWindow) {
 
     // Connects when connect button is clicked.
     ipcMain.on('beam-connect', function(event, activeProfile) {
-        // Set new global variable for active profile.
-        app = {
-            controls: require('./controls/' + activeProfile + '.json')
-        };
         // Initial Connection
-        beamConnect();
+        beamConnect(activeProfile);
     });
 
 } // End Interactive wrap

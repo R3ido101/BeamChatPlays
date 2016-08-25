@@ -14,8 +14,8 @@
     },
     "scripts": {
         "start": "electron app.js",
-        "pack:win32": "electron-packager . BeamChatPlays --out=./dist/win --platform=win32 --arch=ia32",
-        "pack:win64": "electron-packager . BeamChatPlays --out=./dist/win --platform=win32 --arch=x64 --version=1.3.3 app-version=1.0",
+        "pack:win32": "electron-packager . BeamChatPlays --out=C:/Users/Firebottle/Desktop/dist/win --platform=win32 --arch=ia32",
+        "pack:win64": "electron-packager . BeamChatPlays --out=C:/Users/Firebottle/Desktop/dist/win --platform=win32 --arch=x64 --version=1.3.3 app-version=1.0",
         "build": "npm run pack:win32 && npm run pack:win64"
     },
     "devDependencies": {
