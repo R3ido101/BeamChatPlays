@@ -16,7 +16,7 @@ function Interactive(electron, mainWindow) {
         app = {
             auth: require('./settings/auth.json'),
             settings: require('./settings/settings.json'),
-			controls: require('./controls/' + activeProfile + '.json')
+            controls: require('./controls/' + activeProfile + '.json')
         }
 
         channelId = app.auth['channelID'];
@@ -33,12 +33,19 @@ function Interactive(electron, mainWindow) {
             .then(robot => performRobotHandShake(robot))
             .then(robot => setupRobotEvents(robot))
             .catch(err => {
-                console.log(err.message);
+                guiLogger(err.message.body.message);
+                console.log(err.message.body.message);
                 if (err.res) {
+                    guiLogger('Error connecting to Interactive.');
+                    guiEvent('disconnected', 'Disconnected from Interactive.');
                     throw new Error('Error connecting to Interactive:' + err.res.body.message);
                 }
+                guiLogger('Error connecting to Interactive.');
+                guiEvent('disconnected', 'Disconnected from Interactive.');
                 throw new Error('Error connecting to Interactive', err);
             });
+
+        guiEvent('connected', 'Connected to interactive.');
     }
 
     // Creating Robot
@@ -83,7 +90,9 @@ function Interactive(electron, mainWindow) {
             progressUpdate(robot);
         });
         robot.on('error', err => {
-            throw new Error('There was an error setting up robot events.', err);
+            console.log('Error setting up robot events.', err);
+            guiLogger('There was an error setting up robot events.');
+            guiLogger(err);
         });
 
         robot = robot;
@@ -91,7 +100,7 @@ function Interactive(electron, mainWindow) {
 
     // Tactile Handler
     function tactile(tactile) {
-		
+
         for (i = 0; i < tactile.length; i++) {
             // Get Button Settings for ID
             var rawid = tactile[i].id;
@@ -122,8 +131,7 @@ function Interactive(electron, mainWindow) {
                     }
                 }
             } else {
-                guiSend("ERROR: Button #" + rawid + " is missing from controls json file. Stopping app.");
-                process.exit();
+                guiLogger("ERROR: Button #" + rawid + " is missing from game profile in app.");
             }
         }
     }
@@ -154,12 +162,12 @@ function Interactive(electron, mainWindow) {
         var keyTwoPressed = app[movementCounter + 'Save'];
 
         if (keyOne > keyTwo && keyOnePressed === false) {
-            guiSend("Movement: " + key + " was pressed.");
+            guiLogger("Movement: " + key + " was pressed.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         }
         if (keyTwo > keyOne && keyTwoPressed === false) {
-            guiSend("Movement: " + movementCounter + " was pressed.");
+            guiLogger("Movement: " + movementCounter + " was pressed.");
             rjs.keyToggle(movementCounter, "down");
             app[movementCounter + 'Save'] = true;
         }
@@ -176,11 +184,11 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Hold
     function tactileHold(key, holding, buttonID) {
         if (app[key] > 0 && app[key + 'Save'] !== true) {
-            guiSend(key + " is being held down.");
+            guiLogger(key + " is being held down.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         } else if (holding === 0 && app[key + 'Save'] !== false) {
-            guiSend(key + " is no longer held down.");
+            guiLogger(key + " is no longer held down.");
             rjs.keyToggle(key, "up");
             app[key + 'Save'] = false;
         }
@@ -189,7 +197,7 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Tap.
     function tactileTap(key, press, buttonID) {
         if (press > 0) {
-            guiSend(key + " was pressed.");
+            guiLogger(key + " was pressed.");
             rjs.keyToggle(key, "down");
             setTimeout(function() {
                 rjs.keyToggle(key, "up");
@@ -323,8 +331,12 @@ function Interactive(electron, mainWindow) {
     }
 
     // Webcontents Send
-    function guiSend(msg) {
+    function guiLogger(msg) {
         mainWindow.webContents.send('logger', msg);
+    }
+
+    function guiEvent(event, msg) {
+        mainWindow.webContents.send(event, msg);
     }
 
     // Connects when connect button is clicked.
