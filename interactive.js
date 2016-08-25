@@ -27,7 +27,7 @@ function Interactive(electron, mainWindow) {
         beam.use('oauth', {
                 clientId: clientId,
                 token: {
-                    access: "token",
+                    access: token,
                     expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
                 },
             })
