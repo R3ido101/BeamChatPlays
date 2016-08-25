@@ -53,4 +53,4 @@ gui.on('ready', function() {
 gui.on('will-quit', () => {
     // Unregister all shortcuts.
     globalShortcut.unregisterAll()
-})
+});
