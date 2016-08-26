@@ -24,15 +24,14 @@ function Interactive(electron, mainWindow) {
         const authToken = app.auth['token'];
 
         beam.use('oauth', {
-                clientId: app.clientID,
-                tokens: {
-                    access: authToken,
-                    expires: Date.now() + 365 * 24 * 60 * 60 * 1000
-                }
-            })
-            .attempt()
-            .then(() => beam.game.join(channelId))
-            .then(res => createRobot(res))
+            clientId: app.clientID,
+            tokens: {
+                access: authToken,
+                expires: Date.now() + 365 * 24 * 60 * 60 * 1000
+            }
+        })
+        beam.game.join(channelId)
+            .then(res => createRobot(res, channelId))
             .then(robot => performRobotHandShake(robot))
             .then(robot => setupRobotEvents(robot))
             .catch(err => {
@@ -43,14 +42,14 @@ function Interactive(electron, mainWindow) {
                 }
                 guiEvent('logger', 'Error connecting to Interactive.');
                 guiEvent('disconnected', 'Error connecting to Interactive.');
-                throw new Error('Error connecting to Interactive', err);
+                throw err;
             });
 
         guiEvent('connected', 'Connected to interactive.');
     }
 
     // Creating Robot
-    function createRobot(res, stream) {
+    function createRobot(res, channelId) {
         console.log('Creating robot...')
         return new Interactive.Robot({
             remote: res.body.address,
@@ -95,7 +94,6 @@ function Interactive(electron, mainWindow) {
         robot.on('error', err => {
             console.log('Error setting up robot events.', err);
             guiEvent('logger', 'There was an error setting up robot events.');
-            guiEvent('logger', err);
         });
 
         robot = robot;
@@ -264,7 +262,7 @@ function Interactive(electron, mainWindow) {
             var press = tactile[i].pressFrequency;
 
             var controls = app.controls;
-            var button = controls.tactile[rawid]
+            var button = controls.tactile[rawid];
             var cooldown = button['cooldown'];
 
             // Convert JSON Cooldown Number to Milliseconds
