@@ -45,11 +45,11 @@ a,
 a:link,
 a:visited,
 a:active {
-    color: #2c3743;
+    color: #00adb3;
 }
 
 a:hover {
-    color: #2c3743;
+    color: #1cd7dd;
 }
 
 h1 {
@@ -266,6 +266,24 @@ a.ui-button:active,
 
 .log-contents {
     padding: 1em;
+}
+
+
+/** Help Panel **/
+
+.question-wrap {
+    margin: 0em 0em 1em 0em;
+}
+
+.question {
+    padding: 0px;
+    margin: 0px;
+    font-weight: bold;
+}
+
+.answer {
+    padding: 0px;
+    margin: 0px;
 }
 
 

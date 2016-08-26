@@ -37,7 +37,7 @@ $('#profile-adder').parsley();
 function authBeam() {
     var options = {
         client_id: '256e0678a231e8fff721e476d6eb0b43cada80730bd771a4',
-        scopes: ["user:details:self", "interactive:manage:self", "interactive:robot:self", ] // Scopes limit access for OAuth tokens.
+        scopes: ["user:details:self", "interactive:manage:self", "interactive:robot:self"] // Scopes limit access for OAuth tokens.
     };
 
     var authWindow = new BrowserWindow({
@@ -62,7 +62,6 @@ function authBeam() {
         var raw_token = /token=([^&]*)/.exec(url) || null;
         var token = (raw_token && raw_token.length > 1) ? raw_token[1] : null;
         var error = /\?error=(.+)$/.exec(url);
-
 
         if (token) {
             requestBeamData(token, authWindow)
@@ -96,7 +95,7 @@ requestBeamData = function(token, authWindow) {
     }, function(err, res) {
         var data = JSON.parse(res.body);
         //Save Login Info
-        dbAuth.push('/', { "channelID": data.channel.id, "username": data.username, "token": token, "level": data.level, "experience": data.experience, "verified": data.verified, "avatarUrl": data.avatarUrl });
+        dbAuth.push('/', { "channelID": data.channel.id, "username": data.username, "token": token, "avatarUrl": data.avatarUrl });
         //Load up avatar and such on login page. 
         savedLogin();
 
@@ -118,9 +117,7 @@ function authBeamRemove() {
 // Loads saved login info once a person has used oauth, or if user not logged in or disconnects account it shows new info.
 function savedLogin() {
     var auth = dbAuth.getData('/');
-    console.log(auth.length);
     if ($.isEmptyObject(auth)) {
-        console.log('User has not logged in yet.');
         $('.user-profile .avatar, .user-profile .username').empty();
         $('.oauth-details, .login .login-btn').show();
         $('.login .logout-btn').hide();

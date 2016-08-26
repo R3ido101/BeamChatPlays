@@ -20,16 +20,15 @@ function Interactive(electron, mainWindow) {
             clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4"
         }
 
-        const clientId = app.clientID;
         const channelId = app.auth['channelID'];
-        const token = app.auth['token'];
+        const authToken = app.auth['token'];
 
         beam.use('oauth', {
-                clientId: clientId,
-                token: {
-                    access: token,
-                    expires: Date.now() + (365 * 24 * 60 * 60 * 1000)
-                },
+                clientId: app.clientID,
+                tokens: {
+                    access: authToken,
+                    expires: Date.now() + 365 * 24 * 60 * 60 * 1000
+                }
             })
             .attempt()
             .then(() => beam.game.join(channelId))
@@ -38,12 +37,12 @@ function Interactive(electron, mainWindow) {
             .then(robot => setupRobotEvents(robot))
             .catch(err => {
                 if (err.res) {
-                    guiLogger('Error connecting to Interactive.');
-                    guiEvent('disconnected', 'Disconnected from Interactive.');
+                    guiEvent('logger', 'Error connecting to Interactive.');
+                    guiEvent('disconnected', 'Error connecting to Interactive.');
                     throw new Error('Error connecting to Interactive:' + err.res.body.message);
                 }
-                guiLogger('Error connecting to Interactive.');
-                guiEvent('disconnected', 'Disconnected from Interactive.');
+                guiEvent('logger', 'Error connecting to Interactive.');
+                guiEvent('disconnected', 'Error connecting to Interactive.');
                 throw new Error('Error connecting to Interactive', err);
             });
 
@@ -52,6 +51,7 @@ function Interactive(electron, mainWindow) {
 
     // Creating Robot
     function createRobot(res, stream) {
+        console.log('Creating robot...')
         return new Interactive.Robot({
             remote: res.body.address,
             channel: channelId,
@@ -61,6 +61,7 @@ function Interactive(electron, mainWindow) {
 
     // Robot Handshake
     function performRobotHandShake(robot) {
+        console.log('Robot Handshaking...');
         return new Promise((resolve, reject) => {
             robot.handshake(err => {
                 if (err) {
@@ -93,8 +94,8 @@ function Interactive(electron, mainWindow) {
         });
         robot.on('error', err => {
             console.log('Error setting up robot events.', err);
-            guiLogger('There was an error setting up robot events.');
-            guiLogger(err);
+            guiEvent('logger', 'There was an error setting up robot events.');
+            guiEvent('logger', err);
         });
 
         robot = robot;
@@ -133,7 +134,7 @@ function Interactive(electron, mainWindow) {
                     }
                 }
             } else {
-                guiLogger("ERROR: Button #" + rawid + " is missing from game profile in app.");
+                guiEvent('logger', "ERROR: Button #" + rawid + " is missing from game profile in app.");
             }
         }
     }
@@ -164,12 +165,12 @@ function Interactive(electron, mainWindow) {
         var keyTwoPressed = app[movementCounter + 'Save'];
 
         if (keyOne > keyTwo && keyOnePressed === false) {
-            guiLogger("Movement: " + key + " was pressed.");
+            guiEvent('logger', "Movement: " + key + " was pressed.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         }
         if (keyTwo > keyOne && keyTwoPressed === false) {
-            guiLogger("Movement: " + movementCounter + " was pressed.");
+            guiEvent('logger', "Movement: " + movementCounter + " was pressed.");
             rjs.keyToggle(movementCounter, "down");
             app[movementCounter + 'Save'] = true;
         }
@@ -186,11 +187,11 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Hold
     function tactileHold(key, holding, buttonID) {
         if (app[key] > 0 && app[key + 'Save'] !== true) {
-            guiLogger(key + " is being held down.");
+            guiEvent('logger', key + " is being held down.");
             rjs.keyToggle(key, "down");
             app[key + 'Save'] = true;
         } else if (holding === 0 && app[key + 'Save'] !== false) {
-            guiLogger(key + " is no longer held down.");
+            guiEvent('logger', key + " is no longer held down.");
             rjs.keyToggle(key, "up");
             app[key + 'Save'] = false;
         }
@@ -199,7 +200,7 @@ function Interactive(electron, mainWindow) {
     // Tactile Key Tap.
     function tactileTap(key, press, buttonID) {
         if (press > 0) {
-            guiLogger(key + " was pressed.");
+            guiEvent('logger', key + " was pressed.");
             rjs.keyToggle(key, "down");
             setTimeout(function() {
                 rjs.keyToggle(key, "up");
@@ -332,11 +333,7 @@ function Interactive(electron, mainWindow) {
         app.joystickProgress = json;
     }
 
-    // Webcontents Send
-    function guiLogger(msg) {
-        mainWindow.webContents.send('logger', msg);
-    }
-
+    // Send Event to Gui
     function guiEvent(event, msg) {
         mainWindow.webContents.send(event, msg);
     }
