@@ -132,7 +132,7 @@ function Interactive(electron, mainWindow) {
                     }
                 }
             } else {
-                guiEvent('logger', "ERROR: Button #" + rawid + " is missing from game profile in app.");
+                guiEvent('logger', "ERROR: Button #" + rawid + " is missing from game profile in app. Add these buttons to the game profile and restart the app.");
             }
         }
     }
@@ -220,8 +220,11 @@ function Interactive(electron, mainWindow) {
 
     // Screen Controls
     function screen(report) {
-        var screenWidth = 1920;
-        var screenHeight = 1080;
+        //http://electron.atom.io/docs/api/screen/
+        const { width, height } = electron.screen.getPrimaryDisplay().size;
+
+        var screenWidth = width;
+        var screenHeight = height;
         const mean = report.coordMean;
         if (!isNaN(mean.x) && !isNaN(mean.y)) {
             rjs.moveMouse(

@@ -25,10 +25,10 @@
             <div id="tabs-1">
                 <div class="logo"><img src="./images/logo.png"></div>
                 <h1 class="center-text">Beam Chat Plays</h1>
-                <p class="center-text"><a href="http://firebottle.tv" target="_blank">Created by @Firebottle</a></p>
-                <p class="center-text">Thanks to:
-                    <br> @ProbablePrime, @AlfwW, @JJBroBrams</p>
+                <p class="center-text"><a href="http://twitter.com/firebottletv" target="_blank">Created by @Firebottle</a> and <a href="https://github.com/Firebottle/BeamChatPlays" target="_blank">available on Github.</a></p>
                 <p class="center-text"><a href="http://notoriousnetwork.com" target="_blank">NotoriousNetwork.com</a></p>
+                <p class="center-text">Thanks to:
+                    <br> @ProbablePrime, @AlfwW, @JJBroBrams, and Ethan of @Streamjar</p>
             </div>
             <div id="tabs-2">
                 <h2>OAuth Login</h2>
@@ -40,7 +40,7 @@
                 <div class="login">
                     <div>
                         <button class="login-btn" onclick="javascript:authBeam();" title="Using OAuth, give permission for this app to run interactive games. No password is needed.">Login</button>
-                        <button class="logout-btn" onclick="javascript:authBeamRemove();" title="Remove saved account from app. Your browser will open to your account OAuth page so you can revoke permission for the app.">Logout</button>
+                        <button class="logout-btn" style="display:none" onclick="javascript:authBeamRemove();" title="Remove saved account from app. Your browser will open to your account OAuth page so you can revoke permission for the app.">Logout</button>
                     </div>
                 </div>
                 <div class="oauth-details">
@@ -155,6 +155,10 @@
                             <div class="question-wrap">
                                 <p class="question">The screen or joystick controls aren't smooth in game!</p>
                                 <p class="answer">Each game is built to handle mouse movements differently and this app may not work for all of them.</p>
+                            </div>
+                            <div class="question-wrap">
+                                <p class="question">Viewers can't click with the screen controls!</p>
+                                <p class="answer">Nope. This is turned off on purpose. If you give people control of your mouse and also give them the ability to click... bad things can happen. If enough people ask for this it can be incorporated later as a toggle.</p>
                             </div>
                             <div class="question-wrap">
                                 <p class="question">Individual vs Global Cooldowns</p>
