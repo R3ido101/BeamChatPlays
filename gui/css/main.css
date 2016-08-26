@@ -170,6 +170,25 @@ a.ui-button:active,
 }
 
 
+/** Login Page **/
+
+.avatar {
+    width: 10%;
+    display: inline-block;
+}
+
+.avatar img {
+    width: 100%;
+}
+
+.username {
+    display: inline-block;
+    text-align: left;
+    font-weight: bold;
+    padding: 0px 0px 0px .25em;
+}
+
+
 /** Button Tab **/
 
 .button-list-item {

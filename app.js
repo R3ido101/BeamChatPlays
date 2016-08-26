@@ -22,6 +22,7 @@ gui.on('ready', function() {
         minWidth: 50,
         minHeight: 300,
         fullscreenable: false,
+        show: false,
         icon: __dirname + '/fav.png'
     });
     //mainWindow.setMenu(null);
@@ -32,11 +33,11 @@ gui.on('ready', function() {
     // Load up interactive
     var interactive = new Interactive(electron, mainWindow);
 
-	process.on('uncaughtException', function (error) {
-		// Handle the error
-		console.error(error);
-	});
-	
+    process.on('uncaughtException', function(error) {
+        // Handle the error
+        console.error(error);
+    });
+
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
         mainWindow = null;
@@ -46,6 +47,11 @@ gui.on('ready', function() {
     // When Ctrl+Backspace is pressed, interactive will stop.
     globalShortcut.register('CommandOrControl+Backspace', () => {
         gui.quit();
+    })
+
+    // Window Loaded!
+    mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
     })
 });
 

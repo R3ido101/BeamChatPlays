@@ -95,14 +95,42 @@ requestBeamData = function(token, authWindow) {
         }
     }, function(err, res) {
         var data = JSON.parse(res.body);
-        //TODO: Save your data + token.
+        //Save Login Info
         dbAuth.push('/', { "channelID": data.channel.id, "username": data.username, "token": token, "level": data.level, "experience": data.experience, "verified": data.verified, "avatarUrl": data.avatarUrl });
-        $('.user-profile .avatar').html('<img src="' + data.avatarUrl + '">');
-        $('.user-profile .username').html(data.username + ' #' + data.channel.id);
+        //Load up avatar and such on login page. 
+        savedLogin();
 
         authWindow.close()
     });
 };
+
+// Remove Saved Account
+// Removes saved account info.
+function authBeamRemove() {
+    dbAuth.push("/", "");
+    savedLogin();
+
+    // Open OAuth page for user to remove app from account.
+    shell.openExternal('https://beam.pro/me/account/oauth');
+}
+
+// Login Info
+// Loads saved login info once a person has used oauth, or if user not logged in or disconnects account it shows new info.
+function savedLogin() {
+    var auth = dbAuth.getData('/');
+    console.log(auth.length);
+    if ($.isEmptyObject(auth)) {
+        console.log('User has not logged in yet.');
+        $('.user-profile .avatar, .user-profile .username').empty();
+        $('.oauth-details, .login .login-btn').show();
+        $('.login .logout-btn').hide();
+    } else {
+        $('.user-profile .avatar').html('<img src="' + auth.avatarUrl + '">');
+        $('.user-profile .username').html(auth.username + ' #' + auth.channelID);
+        $('.oauth-details, .login .login-btn').hide();
+        $('.login .logout-btn').show();
+    }
+}
 
 // Game Profile List
 // This function grabs a list of all saved game profiles.
@@ -232,6 +260,7 @@ function gameProfileButtonRemove(buttonid) {
 }
 
 // Tip Popup
+// Shows a popup every 5 minutes with a tip.
 function tips() {
     $('.tips').fadeIn("fast").delay(10000).fadeOut("fast");
     window.setTimeout(function() {
@@ -291,6 +320,12 @@ $('.beam-connect-btn').click(function() {
 });
 
 /////////////////////
+// Login Panel
+/////////////////////
+
+
+
+/////////////////////
 // Log Panel
 /////////////////////
 
@@ -312,3 +347,4 @@ ipcRenderer.on('disconnected', (event, message) => {
 /////////////////////////
 gameProfileList();
 tips();
+savedLogin();
