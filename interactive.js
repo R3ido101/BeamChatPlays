@@ -80,7 +80,7 @@ function Interactive(electron, mainWindow) {
     function setupRobotEvents(robot) {
         console.log("Good news everyone! Interactive is ready to go!");
         robot.on('report', report => {
-
+			
             if (report.tactile.length > 0) {
                 tactile(report.tactile);
                 tactileProgress(report.tactile);
@@ -124,8 +124,8 @@ function Interactive(electron, mainWindow) {
                 var cooldown = button['cooldown'];
 
                 buttonSave(key, holding, press);
-
-                if (isNaN(movementCounter) === true && movementCounter !== null && movementCounter !== undefined && movementCounter !== "") {
+				
+                if (movementCounter !== "") {
 
                     movement(key, movementCounter, buttonID);
 
@@ -168,6 +168,10 @@ function Interactive(electron, mainWindow) {
         var keyOnePressed = app[key + 'Save'];
         var keyTwo = app[movementCounter];
         var keyTwoPressed = app[movementCounter + 'Save'];
+		
+		if ( isNaN(keyTwo) === true){
+			guiEvent('logger', "ERROR: The " + key + " button has a movement counter listed for a key that does not exist. Remove it and restart the app.");
+		}
 
         if (keyOne > keyTwo && keyOnePressed === false) {
             guiEvent('logger', "Movement: " + key + " was pressed.");
