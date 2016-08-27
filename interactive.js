@@ -169,7 +169,7 @@ function Interactive(electron, mainWindow) {
         var keyTwo = app[movementCounter];
         var keyTwoPressed = app[movementCounter + 'Save'];
 		
-		if ( isNaN(keyTwo) === true){
+		if ( keyTwo === undefined && keyTwo === null){
 			guiEvent('logger', "ERROR: The " + key + " button has a movement counter listed for a key that does not exist. Remove it and restart the app.");
 		}
 
