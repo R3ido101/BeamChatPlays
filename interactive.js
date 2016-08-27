@@ -1,4 +1,5 @@
 function Interactive(electron, mainWindow) {
+	
     var ipcMain = electron.ipcMain;
     let { app, BrowserWindow } = require('electron');
     let win = null;
@@ -11,18 +12,19 @@ function Interactive(electron, mainWindow) {
 
     // Connects to interactive
     function beamConnect(activeProfile) {
+		
+		guiEvent('logger', 'Attempting to connect to interactive.');
 
         // Global Vars
         app = {
             auth: require('./settings/auth.json'),
-            settings: require('./settings/settings.json'),
             controls: require('./controls/' + activeProfile + '.json'),
             clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4"
         }
 
         const channelId = app.auth['channelID'];
         const authToken = app.auth['token'];
-
+		
         beam.use('oauth', {
             clientId: app.clientID,
             tokens: {
