@@ -10,6 +10,9 @@ Go [here](https://github.com/Firebottle/BeamChatPlays/releases) to download the 
 ## Installation <br>
 Extract the zip file and run the exe.
 
+## Instructions <br>
+Instructions are available on [youtube](https://youtu.be/mYx4loPyh5A).
+
 ## Screens<br>
 ![Starting Screen](http://firebottle.tv/beamchatplays/screenshots/1.png) <br>
 ![Buttons](http://firebottle.tv/beamchatplays/screenshots/2.png)<br>
