@@ -8,6 +8,7 @@ function Interactive(electron, mainWindow) {
     const Beam = require('beam-client-node');
     const Interactive = require('beam-interactive-node');
     const rjs = require('robotjs');
+	rjs.setKeyboardDelay(0);
     const Packets = require('beam-interactive-node/dist/robot/packets').default;
     const beam = new Beam();
 
@@ -169,8 +170,9 @@ function Interactive(electron, mainWindow) {
         var keyTwo = app[movementCounter];
         var keyTwoPressed = app[movementCounter + 'Save'];
 		
-		if ( keyTwo === undefined && keyTwo === null){
-			guiEvent('logger', "ERROR: The " + key + " button has a movement counter listed for a key that does not exist. Remove it and restart the app.");
+		if ( keyTwo === undefined || keyTwo === null){
+			var keyTwo = 0;
+			var keyTwoPressed = false;
 		}
 
         if (keyOne > keyTwo && keyOnePressed === false) {
@@ -184,12 +186,16 @@ function Interactive(electron, mainWindow) {
             app[movementCounter + 'Save'] = true;
         }
         if (keyOne === keyTwo) {
-            if (keyOnePressed === true || keyTwoPressed === true) {
+            if (keyOnePressed === true) {
                 rjs.keyToggle(key, "up");
-                rjs.keyToggle(movementCounter, "up");
                 app[key + 'Save'] = false;
-                app[movementCounter + 'Save'] = false;
-            }
+				guiEvent('logger', "Movement: " + key + " was released.");
+            } 
+			if (keyTwoPressed === true){
+				rjs.keyToggle(movementCounter, "up");
+				app[movementCounter + 'Save'] = false;
+				guiEvent('logger', "Movement: " + movementCounter + " was released.");
+			}
         }
     }
 
