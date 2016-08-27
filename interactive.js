@@ -4,6 +4,7 @@ function Interactive(electron, mainWindow) {
     let { app, BrowserWindow } = require('electron');
     let win = null;
 
+	var JsonDB = require('node-json-db');
     const Beam = require('beam-client-node');
     const Interactive = require('beam-interactive-node');
     const rjs = require('robotjs');
@@ -12,13 +13,15 @@ function Interactive(electron, mainWindow) {
 
     // Connects to interactive
     function beamConnect(activeProfile) {
+		var dbAuth = new JsonDB("./settings/auth", true, false);
+		var dbControls = new JsonDB('./controls/'+activeProfile, true, false);
 		
 		guiEvent('logger', 'Attempting to connect to interactive.');
 
         // Global Vars
         app = {
-            auth: require('./settings/auth.json'),
-            controls: require('./controls/' + activeProfile + '.json'),
+            auth: dbAuth.getData('/'),
+            controls: dbControls.getData('/'),
             clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4"
         }
 
@@ -95,6 +98,8 @@ function Interactive(electron, mainWindow) {
         });
         robot.on('error', err => {
             console.log('Error setting up robot events.', err);
+			guiEvent('logger', 'Error connecting to Interactive.');
+            guiEvent('disconnected', 'Error with robot. Check log.');
             guiEvent('logger', 'There was an error setting up robot events.');
         });
 
