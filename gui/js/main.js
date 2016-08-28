@@ -103,6 +103,12 @@ requestBeamData = function(token, authWindow) {
     });
 };
 
+// Build settings.json
+// Builds the settings.json file on app launch. Keeps valid keys from getting lost.
+function settingsBuild(){
+	dbSettings.push('/validKeys', {"0":true,"1":true,"2":true,"3":true,"4":true,"5":true,"6":true,"7":true,"8":true,"9":true,"a":true,"b":true,"c":true,"d":true,"e":true,"f":true,"g":true,"h":true,"i":true,"j":true,"k":true,"l":true,"m":true,"n":true,"o":true,"p":true,"q":true,"r":true,"s":true,"t":true,"u":true,"v":true,"w":true,"x":true,"y":true,"z":true,"backspace":true,"delete":true,"enter":true,"tab":true,"escape":true,"up":true,"down":true,"left":true,"right":true,"home":true,"end":true,"pageup":true,"pagedown":true,"f1":true,"f2":true,"f3":true,"f4":true,"f5":true,"f6":true,"f7":true,"f8":true,"f9":true,"f0":true,"f11":true,"f12":true,"alt":true,"control":true,"shift":true,"right_shift":true,"numpad_0":true,"numpad_1":true,"numpad_2":true,"numpad_3":true,"numpad_4":true,"numpad_5":true,"numpad_6":true,"numpad_7":true,"numpad_8":true,"numpad_9":true});
+}
+
 // Remove Saved Account
 // Removes saved account info.
 function authBeamRemove() {
@@ -164,6 +170,27 @@ function gameProfileButtonList() {
                 var keypress = buttonArray[i].key;
                 var movecounter = buttonArray[i].movementCounter;
                 var cooldown = buttonArray[i].cooldown;
+				
+				console.log(keypress);
+				
+				if(keypress != ""){
+					try{
+						dbSettings.getData("/validKeys/"+keypress);
+					}catch(error){
+							$('.log-contents').prepend('<div class="log-message">'+keypress+' is an invalid key. This is caused by an invalid control in the controls JSON file. Remake the button using the app.</div>');
+							var keypress = "<span class=error>Invalid Key</span>"
+					}
+				}
+				
+				if(movecounter != ""){
+					try{
+						dbSettings.getData("/validKeys/"+movecounter);
+					}catch(error){
+						$('.log-contents').prepend('<div class="log-message">'+movecounter+' is an invalid key. This is caused by an invalid control in the controls JSON file. Remake the button using the app.</div>');
+						var movecounter = "<span class=error>Invalid Key</span>"
+					}
+				}
+				
 
                 if (movecounter == "") {
                     var movecounter = "None";
@@ -189,7 +216,10 @@ function gameProfileAdd() {
         dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
         $('.profile-name input').val("").removeClass('parsley-success');
         gameProfileList();
-
+		$('.control-dropdown').val(profileName);
+		$('.new-game-profile').fadeOut("fast", function() {
+            $('.control-entry').fadeIn("fast");
+        });
         return false;
     });
 }
@@ -204,6 +234,8 @@ function gameProfileRemove() {
         dbSettings.delete("/gameProfiles/" + profileName);
         gameProfileList();
         gameProfileButtonList();
+		$('.control-dropdown option:eq(0)').prop('selected', true);
+		$('.control-entry').fadeOut('fast');
     })
 }
 
@@ -227,9 +259,10 @@ function addButtonToProfile() {
         var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
 
         var buttonid = $('.control-entry .buttonid input').val();
-        var keypress = $('.control-entry .key input').val();
-        var movecounter = $('.control-entry .counter input').val();
+        var keypress = $('.control-entry .key .key-dropdown').val();
+        var movecounter = $('.control-entry .counter .counter-dropdown').val();
         var cooldown = $('.control-entry .cooldown input').val();
+		
 
         // Push to DB.
         dbControls.push("/tactile/" + buttonid, { "id": buttonid, "key": keypress, "movementCounter": movecounter, "cooldown": cooldown });
@@ -238,6 +271,9 @@ function addButtonToProfile() {
 
         // Clean up inputs
         $('.control-entry input').val("").removeClass('parsley-success');
+		$('.control-entry select').removeClass('parsley-success');
+		$('.control-entry .key .key-dropdown option:eq(0)').prop('selected', true);
+		$('.control-entry .counter .counter-dropdown option:eq(0)').prop('selected', true);
 
         return false;
     });
@@ -342,6 +378,7 @@ ipcRenderer.on('disconnected', (event, message) => {
 /////////////////////////
 // Initial Load Functions
 /////////////////////////
+settingsBuild();
 gameProfileList();
 tips();
 savedLogin();

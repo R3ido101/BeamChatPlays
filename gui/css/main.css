@@ -82,7 +82,6 @@ h1 {
     color: white;
 }
 
-
 /** Tab Structure **/
 
 #tabs {
@@ -340,4 +339,7 @@ textarea.parsley-error {
 
 .parsley-errors-list.filled {
     opacity: 1;
+}
+.error{
+	color:red;
 }
