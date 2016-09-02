@@ -11,6 +11,11 @@ var dbSettings = new JsonDB('./settings/settings', true, false);
 
 // Initial Tab Setup
 $(function() {
+    // Add version number to title bar.
+    var pjson = process.env.npm_package_version;
+    $('title').text('Beam Chat Plays ' + pjson + ' by @firebottletv');
+
+    // Set up tabs.
     $("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
     $("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
 });
