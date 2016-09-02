@@ -218,7 +218,6 @@ function gameProfileAdd() {
     $('#profile-adder').parsley().on('form:submit', function() {
         var profileName = $('.profile-name input').val();
         var dbControls = new JsonDB("./controls/" + profileName, true, false);
-        dbSettings.push('/gameProfiles/' + profileName + '/filename', profileName);
         $('.profile-name input').val("").removeClass('parsley-success');
         gameProfileList();
         $('.control-dropdown').val(profileName);
@@ -235,8 +234,6 @@ function gameProfileRemove() {
     var profileName = $('.control-dropdown').val();
     fs.unlink('./controls/' + profileName + '.json', (err) => {
         if (err) throw err;
-        console.log('Deleted file /controls/' + profileName);
-        dbSettings.delete("/gameProfiles/" + profileName);
         gameProfileList();
         gameProfileButtonList();
         $('.control-dropdown option:eq(0)').prop('selected', true);
