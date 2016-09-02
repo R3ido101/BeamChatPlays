@@ -147,9 +147,9 @@ function gameProfileList() {
         $(this).remove();
     });
 
-    var games = Object.keys(dbSettings.getData("/gameProfiles"));
+    var games = fs.readdirSync('./controls');
     for (var i = 0, length = games.length; i < length; i++) {
-        $('.control-dropdown, .active-profile-dropdown').append('<option value="' + games[i] + '">' + games[i] + '</option>');
+        $('.control-dropdown, .active-profile-dropdown').append('<option value="' + games[i].split('.')[0] + '">' + games[i].split('.')[0] + '</option>');
     }
 }
 
