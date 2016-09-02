@@ -5,6 +5,7 @@ const fs = require('fs');
 var ipcRenderer = require('electron').ipcRenderer;
 const shell = require('electron').shell;
 const request = require('request');
+const keycode = require('keycode');
 
 var dbAuth = new JsonDB("./settings/auth", true, false);
 var dbSettings = new JsonDB('./settings/settings', true, false);
@@ -47,11 +48,10 @@ function authBeam() {
 
     var authWindow = new BrowserWindow({
         width: 400,
-        height: 600,
-        resizable: false,
+        height: 625,
+        resizable: true,
         alwaysOnTop: true,
-        transparent: true,
-        show: false,
+        show: true,
         webPreferences: {
             nodeIntegration: false,
             partition: 'persist:interactive'
@@ -176,8 +176,6 @@ function gameProfileButtonList() {
                 var movecounter = buttonArray[i].movementCounter;
                 var cooldown = buttonArray[i].cooldown;
 
-                console.log(keypress);
-
                 if (keypress != "") {
                     try {
                         dbSettings.getData("/validKeys/" + keypress);
@@ -294,6 +292,74 @@ function gameProfileButtonRemove(buttonid) {
     gameProfileButtonList();
 }
 
+// Convert Beam JSON
+function convertBeamJson() {
+    var activeProfile = $('.control-dropdown').val();
+    var dbControls = new JsonDB("./controls/" + activeProfile, true, false);
+    var beamJson = $('.json-import-area').val();
+
+    try {
+        var beamParsed = JSON.parse(beamJson);
+        var beamTactiles = beamParsed.tactiles;
+        // Cycle through and grab tactile information.
+        for (var i = 0, length = beamTactiles.length; i < length; i++) {
+            var button = beamTactiles[i];
+            var buttonid = button.id;
+            var buttonKeyNum = button.key;
+            var keypress = keycode.names[buttonKeyNum];
+            var movementCounter = "";
+            var holding = button.analysis['holding'];
+            var frequency = button.analysis['frequency'];
+
+            // Check to make sure keycode module didn't blow it. If it did, just use the beam key name.
+            if (keypress === undefined || keypress === null) {
+                var keypress = buttonKeyNum;
+            }
+
+            // Set movement counters for commonly used movement keys if holding is active.
+            if (keypress == "w" && holding === true) {
+                var movementCounter = "s";
+            }
+            if (keypress == "s" && holding === true) {
+                var movementCounter = "w";
+            }
+            if (keypress == "a" && holding === true) {
+                var movementCounter = "d";
+            }
+            if (keypress == "d" && holding === true) {
+                var movementCounter = "a";
+            }
+
+            // Correct what you can automatically.
+            if (keypress == "ctrl") {
+                var keypress = "control"
+            }
+            if (keypress == "page up") {
+                var keypress = "pageup";
+            }
+            if (keypress == "page down") {
+                var keypress = "pagedown";
+            }
+
+            // Push to DB if button checks out.
+            if (holding === true || frequency === true) {
+                dbControls.push("/tactile/" + buttonid, { "id": buttonid, "key": keypress, "movementCounter": movementCounter, "cooldown": "0" });
+            } else {
+                // ERROR WITH BUTTON SETUP. Button does not have holding or press frequency checked.
+                // TO DO: Handle this error gracefully.
+                alert('Button #' + buttonid + ' does not have holding or frequency checked in dev lab. For the button to work, one of these must be checked.');
+            }
+        }
+    } catch (e) {
+        // ERROR IN THE JSON.
+        // TO DO: Handle this gracefully.
+        alert(e);
+    }
+
+    // Reload button list and clean up.
+    gameProfileButtonList();
+}
+
 // Tip Popup
 // Shows a popup every 5 minutes with a tip.
 function tips() {
@@ -348,6 +414,11 @@ $('.new-game-profile .profile-add').click(function() {
 $('.remove-profile').click(function() {
     gameProfileRemove();
 });
+
+// When user adds beam json to profile.
+$('.json-import-add').click(function() {
+    convertBeamJson();
+})
 
 // Connect to Beam
 $('.beam-connect-btn').click(function() {

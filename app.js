@@ -18,6 +18,7 @@ gui.on('ready', function() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 1100,
+        height: 700,
         minHeight: 500,
         minWidth: 50,
         minHeight: 300,

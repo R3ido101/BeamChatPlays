@@ -27,6 +27,11 @@ select {
     width: 75%;
 }
 
+textarea {
+    padding: .5em;
+    width: 82%;
+}
+
 button {
     border-radius: 5px;
     background-color: transparent;
@@ -81,6 +86,7 @@ h1 {
     text-align: center;
     color: white;
 }
+
 
 /** Tab Structure **/
 
@@ -340,6 +346,7 @@ textarea.parsley-error {
 .parsley-errors-list.filled {
     opacity: 1;
 }
-.error{
-	color:red;
+
+.error {
+    color: red;
 }
