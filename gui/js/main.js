@@ -347,16 +347,18 @@ function convertBeamJson() {
             } else {
                 // ERROR WITH BUTTON SETUP. Button does not have holding or press frequency checked.
                 // TO DO: Handle this error gracefully.
-                alert('Button #' + buttonid + ' does not have holding or frequency checked in dev lab. For the button to work, one of these must be checked.');
+                alert('Button #' + buttonid + ' does not have holding or frequency checked in devlab. For the button to work, one of these must be checked.');
             }
         }
     } catch (e) {
         // ERROR IN THE JSON.
         // TO DO: Handle this gracefully.
-        alert(e);
+        alert('Error: JSON is not formatted correctly. Make sure you copy/paste the entire controls JSON from the devlab.');
+
     }
 
     // Reload button list and clean up.
+    $('.json-import-area').val('');
     gameProfileButtonList();
 }
 
