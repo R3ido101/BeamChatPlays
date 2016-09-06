@@ -1,34 +1,35 @@
 function Interactive(electron, mainWindow) {
-	
+
     var ipcMain = electron.ipcMain;
     let { app, BrowserWindow } = require('electron');
     let win = null;
 
-	var JsonDB = require('node-json-db');
+    var JsonDB = require('node-json-db');
     const Beam = require('beam-client-node');
     const Interactive = require('beam-interactive-node');
     const rjs = require('robotjs');
-	rjs.setKeyboardDelay(0);
+    rjs.setKeyboardDelay(0);
     const Packets = require('beam-interactive-node/dist/robot/packets').default;
     const beam = new Beam();
 
     // Connects to interactive
     function beamConnect(activeProfile) {
-		var dbAuth = new JsonDB("./settings/auth", true, false);
-		var dbControls = new JsonDB('./controls/'+activeProfile, true, false);
-		
-		guiEvent('logger', 'Attempting to connect to interactive.');
+        var dbAuth = new JsonDB("./settings/auth", true, false);
+        var dbControls = new JsonDB('./controls/' + activeProfile, true, false);
+
+        guiEvent('logger', 'Attempting to connect to interactive.');
 
         // Global Vars
         app = {
             auth: dbAuth.getData('/'),
             controls: dbControls.getData('/'),
-            clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4"
+            clientID: "256e0678a231e8fff721e476d6eb0b43cada80730bd771a4",
+            progress: ""
         }
 
         const channelId = app.auth['channelID'];
         const authToken = app.auth['token'];
-		
+
         beam.use('oauth', {
             clientId: app.clientID,
             tokens: {
@@ -81,7 +82,7 @@ function Interactive(electron, mainWindow) {
     function setupRobotEvents(robot) {
         console.log("Good news everyone! Interactive is ready to go!");
         robot.on('report', report => {
-			
+
             if (report.tactile.length > 0) {
                 tactile(report.tactile);
                 tactileProgress(report.tactile);
@@ -99,7 +100,7 @@ function Interactive(electron, mainWindow) {
         });
         robot.on('error', err => {
             console.log('Error setting up robot events.', err);
-			guiEvent('logger', 'Error connecting to Interactive.');
+            guiEvent('logger', 'Error connecting to Interactive.');
             guiEvent('disconnected', 'Error with robot. Check log.');
             guiEvent('logger', 'There was an error setting up robot events.');
         });
@@ -125,7 +126,7 @@ function Interactive(electron, mainWindow) {
                 var cooldown = button['cooldown'];
 
                 buttonSave(key, holding, press);
-				
+
                 if (movementCounter !== "") {
 
                     movement(key, movementCounter, buttonID);
@@ -169,11 +170,11 @@ function Interactive(electron, mainWindow) {
         var keyOnePressed = app[key + 'Save'];
         var keyTwo = app[movementCounter];
         var keyTwoPressed = app[movementCounter + 'Save'];
-		
-		if ( keyTwo === undefined || keyTwo === null){
-			var keyTwo = 0;
-			var keyTwoPressed = false;
-		}
+
+        if (keyTwo === undefined || keyTwo === null) {
+            var keyTwo = 0;
+            var keyTwoPressed = false;
+        }
 
         if (keyOne > keyTwo && keyOnePressed === false) {
             guiEvent('logger', "Movement: " + key + " was pressed.");
@@ -189,13 +190,13 @@ function Interactive(electron, mainWindow) {
             if (keyOnePressed === true) {
                 rjs.keyToggle(key, "up");
                 app[key + 'Save'] = false;
-				guiEvent('logger', "Movement: " + key + " was released.");
-            } 
-			if (keyTwoPressed === true){
-				rjs.keyToggle(movementCounter, "up");
-				app[movementCounter + 'Save'] = false;
-				guiEvent('logger', "Movement: " + movementCounter + " was released.");
-			}
+                guiEvent('logger', "Movement: " + key + " was released.");
+            }
+            if (keyTwoPressed === true) {
+                rjs.keyToggle(movementCounter, "up");
+                app[movementCounter + 'Save'] = false;
+                guiEvent('logger', "Movement: " + movementCounter + " was released.");
+            }
         }
     }
 
@@ -265,9 +266,12 @@ function Interactive(electron, mainWindow) {
             "joystick": joystick
         }
 
-        //console.log(progress);
+        // If there is any new info, send progress update.
+        if (app.progress !== progress) {
+            robot.send(new Packets.ProgressUpdate(progress));
+            app.progress = progress;
+        }
 
-        robot.send(new Packets.ProgressUpdate(progress));
         app.tactileProgress = [];
         app.screenProgress = [];
         app.joystickProgress = [];
