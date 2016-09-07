@@ -266,11 +266,10 @@ function Interactive(electron, mainWindow) {
             "joystick": joystick
         }
 
-        // If there is any new info, send progress update.
-        if (app.progress !== progress) {
-            robot.send(new Packets.ProgressUpdate(progress));
-            app.progress = progress;
-        }
+		// Send progress update if it has any new info.
+		if(tactile != "" && tactile !== undefined || screen != "" && screen !== undefined || joystick != "" && joystick !== undefined){
+			robot.send(new Packets.ProgressUpdate(progress));
+		}
 
         app.tactileProgress = [];
         app.screenProgress = [];
